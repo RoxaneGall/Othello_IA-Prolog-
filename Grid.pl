@@ -41,7 +41,7 @@ moveRight(Grid,Line,Col,NewGrid) :-
     NewGrid=Grid,
     equal(Token1,Token2).
 
-element(Grid,Line,Col,Element) :- nth1(Line,Grid,CharList), nth1(Col,CharList,Element).
+element(Grid,Line,Col,Element) :- nth0(Line,Grid,CharList), nth0(Col,CharList,Element).
 
 equal(Token,Token).
 canFlip(x,o).
