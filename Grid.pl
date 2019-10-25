@@ -30,14 +30,14 @@ direction(droite,Lin,Col,NextLin,NextCol) :- incr(Col,NextCol), NextLin = Lin.
 direction(hautDroite,Lin,Col,NextLin,NextCol) :- incr(Lin,NextLin), incr(NextCol,Col).
 direction(haut,Lin,Col,NextLin,NextCol) :- incr(NextLin,Lin), NextCol = Col.
 
-moveRight(Grid,Line,Col,NewGrid) :- 
+move(Grid,Line,Col,NewGrid,Direction) :- 
     incr(Col,Col1),
     element(Grid,Line,Col,Token1),
     element(Grid,Line,Col1,Token2),
     canFlip(Token1,Token2),
     moveRight(Grid,Line,Col1,NewGrid).
 
-moveRight(Grid,Line,Col,NewGrid) :- 
+move(Grid,Line,Col,NewGrid,Direction) :- 
     incr(Col,Col1),
     element(Grid,Line,Col,Token1),
     element(Grid,Line,Col1,Token2),
