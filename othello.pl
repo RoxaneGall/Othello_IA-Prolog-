@@ -1,14 +1,46 @@
 % Initiatisation
 
-play() :-  initialGrid(Grid),displayGrid(Grid,x),play(Grid,x).
+play() :-  nl,
+    write("PLAYER1 (x):"), nl, 
+    choosePlayer(Player1), nl,
+    write("PLAYER2 (o):"), nl, 
+    choosePlayer(Player2), nl,
+    write(" -> "), 
+    write(Player1),
+    write(" vs "),
+    write(Player2), nl,
+    initialGrid(Grid),
+    displayGrid(Grid,x),
+    play(Grid,x,Player1,Player2).
+
+choosePlayer(Player) :- tryChoosePlayer(Player).
+
+tryChoosePlayer(Player) :- write("Choisissez la nature du joueur (choix possibles: humain, firstMove) "), read(Player), player(Player).
+tryChoosePlayer(Player) :- write("Player inconnu, "), tryChoosePlayer(Player).
+
+player(humain).
+player(firstMove).
 
 % Ex�cution d'un tour de jeu
 
 % Cas o� le jeu est fini : endGame(grid, player) v�rifie si le plateau
 % complet ou si le joueur n'a plus de jeton
 % announce(player) annonce le gagnant.
-%play(Grid, Player) :- endGame(Grid, Player), !, announce(Player).
-play(Grid, Player) :- chooseMove(Grid,Line,Column,Player), doMove(Grid,Line,Column,Player,NewGrid), nextPlayer(Player,Player2), displayGrid(NewGrid,Player2), !, play(NewGrid,Player2). % cas d'un tour classique
+%play(Grid, CurrentPlayer, Player1, Player2) :- endGame(Grid, Player), !, announce(Player).
+play(Grid, Player, humain, Player2) :-
+    chooseMove(Grid,Line,Column,Player), 
+    doMove(Grid,Line,Column,Player,NewGrid), 
+    nextPlayer(Player,NextPlayer), 
+    displayGrid(NewGrid,NextPlayer), !, 
+    play(NewGrid,NextPlayer,Player2,humain).
+
+play(Grid, Player, firstMove, Player2) :-
+    existingMove(Line,Column), 
+    isValidMove(Grid,Line,Column,Player),
+    doMove(Grid,Line,Column,Player,NewGrid), 
+    nextPlayer(Player,NextPlayer), 
+    displayGrid(NewGrid,NextPlayer), !, 
+    play(NewGrid,NextPlayer,Player2,firstMove).
 
 % Passage au joueur oppos�
 nextPlayer(x,o).
@@ -22,8 +54,17 @@ nextPlayer(o,x).
 % permet au player de manger des jetons adverses
 chooseMove(Grid,Line,Column,Player) :- tryChooseMove(Grid,Line,Column,Player).
 
-tryChooseMove(Grid,Line,Column,Player) :- write("Entrez la lettre de la case choisie "), read(Letter), write("Entrez le numéro de la case choisie "), read(Number), existingMove(Number,Letter,Line,Column), isValidMove(Grid,Line,Column,Player), !.
-tryChooseMove(Grid,Line,Column,Player) :- write("Position illégale, "), tryChooseMove(Grid,Line,Column,Player).
+tryChooseMove(Grid,Line,Column,Player) :-
+    write("Entrez la lettre de la case choisie "), 
+    read(Letter), 
+    write("Entrez le numero de la case choisie "), 
+    read(Number), 
+    existingMove(Number,Letter,Line,Column), 
+    isValidMove(Grid,Line,Column,Player), !.
+
+tryChooseMove(Grid,Line,Column,Player) :- 
+    write("Position illegale, "), 
+    tryChooseMove(Grid,Line,Column,Player).
 
 % Conditions de fin du jeu endGame(grid, player) :- A FAIRE PAR LES
 % MOCHES
@@ -46,6 +87,10 @@ existingPosition(5).
 existingPosition(6).
 existingPosition(7).
 existingPosition(8).
+
+existingMove(Number,Column) :-
+    existingPosition(Number),
+    existingPosition(Column).
 
 existingMove(Number,Letter,Number,Column) :-
     existingPosition(Number),
