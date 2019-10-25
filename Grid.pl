@@ -13,7 +13,7 @@ initialGrid([
 
 displayGrid(Grid,Player) :-
     length(Grid,Nblines),
-    nl, write("  AU TOUR DES "), canFlip(Player,NextPlayer), write(NextPlayer), nl, nl,
+    nl, write("  AU TOUR DES "), write(Player), nl, nl,
     forall(between(1, Nblines, Line), (nth1(Line,Grid,CharList), displayRow(CharList), nl)),
     nl.
 
@@ -34,41 +34,34 @@ editGrid(_,_,_,_,[],[]).
 
 isValidMove(Grid,Line,Column,Player) :- 
     isEmpty(Grid,Line,Column),
-    direction(Dir1),
-    isNextToOpponent(Grid,Line,Column,Player,Dir1),
-    direction(Dir2),
-    aPlayerTokenIsInDirection(Grid,Line,Column,Player,Dir2).
+    direction(Dir),
+    canFlipOponentTokens(0,Grid,Line,Column,Player,Dir).
 
 isEmpty(Grid,Line,Column) :- element(Grid,Line,Column,"-").
 
-isNextToOpponent(Grid,Lin,Col,Player,Direction) :- 
-    direction(Direction, Lin, Col, NextLin, NextCol),
-    element(Grid,NextLin,NextCol,Neighbor),
-    canFlip(Player,Neighbor).
-
-aPlayerTokenIsInDirection(Grid,Lin,Col,Player,Direction) :-
+canFlipOponentTokens(NbTokenMoved,Grid,Lin,Col,Player,Direction) :-
     direction(Direction, Lin, Col, NextLin, NextCol),
     element(Grid,NextLin,NextCol,Token2),
     canFlip(Player,Token2),
-    aPlayerTokenIsInDirection(Grid,NextLin,NextCol,Direction).
+    incr(NbTokenMoved,NewNbTokenMoved),
+    canFlipOponentTokens(NewNbTokenMoved,Grid,NextLin,NextCol,Player,Direction).
 
-aPlayerTokenIsInDirection(Grid,Lin,Col,Player,Direction) :- 
+canFlipOponentTokens(NbTokenMoved,Grid,Lin,Col,Player,Direction) :- 
     direction(Direction, Lin, Col, NextLin, NextCol),
     element(Grid,NextLin,NextCol,Token2),
-    equal(Player,Token2).
+    equal(Player,Token2),
+    NbTokenMoved\==0.
 
 doMove(Grid,Line,Column,Player,FinalGrid) :-
-    isValidMove(Grid,Line,Column,Player),
     editGrid(Player,Line,Column,Grid,NewGrid),
-    move(NewGrid,Line,Column,NewGrid1,bas),
-    move(NewGrid1,Line,Column,NewGrid2,basDroite),
-    move(NewGrid2,Line,Column,NewGrid3,droite),
-    move(NewGrid3,Line,Column,NewGrid4,hautDroite),
-    move(NewGrid4,Line,Column,NewGrid5,haut),
-    move(NewGrid5,Line,Column,NewGrid6,hautGauche),
-    move(NewGrid6,Line,Column,NewGrid7,gauche),
-    move(NewGrid7,Line,Column,FinalGrid,basGauche),
-    displayGrid(FinalGrid,Player).
+    tryMove(NewGrid,Line,Column,NewGrid1,bas),
+    tryMove(NewGrid1,Line,Column,NewGrid2,basDroite),
+    tryMove(NewGrid2,Line,Column,NewGrid3,droite),
+    tryMove(NewGrid3,Line,Column,NewGrid4,hautDroite),
+    tryMove(NewGrid4,Line,Column,NewGrid5,haut),
+    tryMove(NewGrid5,Line,Column,NewGrid6,hautGauche),
+    tryMove(NewGrid6,Line,Column,NewGrid7,gauche),
+    tryMove(NewGrid7,Line,Column,FinalGrid,basGauche).
 
 direction(bas).
 direction(basDroite).
@@ -82,11 +75,11 @@ direction(basGauche).
 direction(bas,Lin,Col,NextLin,Col) :- incr(Lin,NextLin).
 direction(basDroite,Lin,Col,NextLin,NextCol) :- incr(Lin,NextLin), incr(Col,NextCol).
 direction(droite,Lin,Col,Lin,NextCol) :- incr(Col,NextCol).
-direction(hautDroite,Lin,Col,NextLin,NextCol) :- incr(Lin,NextLin), decr(Col,NextCol).
+direction(hautDroite,Lin,Col,NextLin,NextCol) :- incr(Col,NextCol), decr(Lin,NextLin).
 direction(haut,Lin,Col,NextLin,Col) :- decr(Lin,NextLin).
 direction(hautGauche,Lin,Col,NextLin,NextCol) :- decr(Lin,NextLin), decr(Col,NextCol).
 direction(gauche,Lin,Col,Lin,NextCol) :- decr(Col,NextCol).
-direction(basGauche,Lin,Col,NextLin,NextCol) :- decr(Lin,NextLin), decr(Col,NextCol).
+direction(basGauche,Lin,Col,NextLin,NextCol) :- incr(Lin,NextLin), decr(Col,NextCol).
 
 move(Grid,Lin,Col,FinalGrid,Direction) :- 
     direction(Direction, Lin, Col, NextLin, NextCol),
@@ -102,7 +95,8 @@ move(FinalGrid,Lin,Col,FinalGrid,Direction) :-
     element(FinalGrid,NextLin,NextCol,Token2),
     equal(Token1,Token2).
 
-move(Grid,_,_,Grid,_).
+tryMove(Grid,Lin,Col,FinalGrid,Direction) :- move(Grid,Lin,Col,FinalGrid,Direction).
+tryMove(Grid,_,_,Grid,_).
 
 element(Grid,Line,Col,Element) :- nth0(Line,Grid,CharList), nth0(Col,CharList,Element).
 
