@@ -35,18 +35,18 @@ editGrid(_,_,_,_,[],[]).
 isValidMove(Grid,Line,Column,Player) :- 
     isEmpty(Grid,Line,Column),
     direction(Dir),
-    canFlipOponentTokens(0,Grid,Line,Column,Player,Dir).
+    canFlipOpponentTokens(0,Grid,Line,Column,Player,Dir).
 
 isEmpty(Grid,Line,Column) :- element(Grid,Line,Column,"-").
 
-canFlipOponentTokens(NbTokenMoved,Grid,Lin,Col,Player,Direction) :-
+canFlipOpponentTokens(NbTokenMoved,Grid,Lin,Col,Player,Direction) :-
     direction(Direction, Lin, Col, NextLin, NextCol),
     element(Grid,NextLin,NextCol,Token2),
     canFlip(Player,Token2),
     incr(NbTokenMoved,NewNbTokenMoved),
-    canFlipOponentTokens(NewNbTokenMoved,Grid,NextLin,NextCol,Player,Direction).
+    canFlipOpponentTokens(NewNbTokenMoved,Grid,NextLin,NextCol,Player,Direction).
 
-canFlipOponentTokens(NbTokenMoved,Grid,Lin,Col,Player,Direction) :- 
+canFlipOpponentTokens(NbTokenMoved,Grid,Lin,Col,Player,Direction) :- 
     direction(Direction, Lin, Col, NextLin, NextCol),
     element(Grid,NextLin,NextCol,Token2),
     equal(Player,Token2),
@@ -94,6 +94,40 @@ move(FinalGrid,Lin,Col,FinalGrid,Direction) :-
     element(FinalGrid,Lin,Col,Token1),
     element(FinalGrid,NextLin,NextCol,Token2),
     equal(Token1,Token2).
+
+winner(Nx,No,x) :- Nx > No.
+winner(Nx,No,o) :- Nx < No.
+
+getPlayerNature(x,x, Winner, _, Winner).
+getPlayerNature(o,x, _, Winner, Winner).
+getPlayerNature(o,o, Winner, _, Winner).
+getPlayerNature(x,o, _, Winner, Winner).
+
+announceWinner(Grid, CurrentPlayer, Player1, Player2) :-
+    countTokens(Grid, x, 0, Nx),
+    countTokens(Grid, o, 0, No),
+    winner(Nx,No,Winner),
+    getPlayerNature(Winner, CurrentPlayer, Player1, Player2, WinnerNature),
+    write("       x: "), write(Nx), nl,
+    write("       o: "), write(No), nl,
+    write("       WINNER IS : "), write(WinnerNature), write(" ("), write(Winner), write(")."),nl,nl.
+
+announceWinner(_, _, _, _) :-
+    write("THERE IS NO WINNER").
+
+countTokens([Head|Tail], Player, N, FinalN) :-
+    countTokensInRow(Head, Player, N, NewN),
+    countTokens(Tail, Player, NewN, FinalN).
+
+countTokens([],_,N,N).
+
+countTokensInRow([Head|Tail], Player, N, FinalN) :- 
+    equal(Head,Player),
+    incr(N,NewN),
+    countTokensInRow(Tail,Player,NewN,FinalN).
+    
+countTokensInRow([_|Tail], Player, N, FinalN) :- countTokensInRow(Tail,Player,N,FinalN).
+countTokensInRow([],_,N,N).
 
 tryMove(Grid,Lin,Col,FinalGrid,Direction) :- move(Grid,Lin,Col,FinalGrid,Direction).
 tryMove(Grid,_,_,Grid,_).

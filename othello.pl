@@ -26,14 +26,20 @@ player(firstMove).
 % Cas o� le jeu est fini : endGame(grid, player) v�rifie si le plateau
 % complet ou si le joueur n'a plus de jeton
 % announce(player) annonce le gagnant.
-%play(Grid, CurrentPlayer, Player1, Player2) :- endGame(Grid, Player), !, announce(Player).
+
+play(Grid, CurrentPlayer, Player1, Player2) :- 
+    endGame(Grid), 
+    announceWinner(Grid, CurrentPlayer, Player1, Player2), !.
+
 play(Grid, Player, humain, Player2) :-
+    canMove(Grid, Player),
     chooseMove(Grid,Line,Column,Player), 
     doMove(Grid,Line,Column,Player,NewGrid), 
     nextPlayer(Player,NextPlayer), 
     displayGrid(NewGrid,NextPlayer), !, 
     play(NewGrid,NextPlayer,Player2,humain).
 
+%IA qui effectue le premier mouvement possible
 play(Grid, Player, firstMove, Player2) :-
     existingMove(Line,Column), 
     isValidMove(Grid,Line,Column,Player),
@@ -42,9 +48,23 @@ play(Grid, Player, firstMove, Player2) :-
     displayGrid(NewGrid,NextPlayer), !, 
     play(NewGrid,NextPlayer,Player2,firstMove).
 
+%Passer son tour
+play(Grid, Player, Player1, Player2) :-
+    nextPlayer(Player,NextPlayer),
+    write(Player1), write(" ("), write(Player), write(") PASSE SON TOUR!"), nl,
+    play(Grid,NextPlayer,Player2,Player1).
+
 % Passage au joueur oppos�
 nextPlayer(x,o).
 nextPlayer(o,x).
+
+canMove(Grid, Player) :-
+    existingMove(Line,Column), 
+    isValidMove(Grid,Line,Column,Player).
+
+endGame(Grid) :- 
+    \+ canMove(Grid,o),
+    \+ canMove(Grid,x).
 
 % Pr�dicat pour v�rifier si le mouvement est valide
 % existingMove(l,c) v�rifie que ligne et colonne rentr�es sont comprises
