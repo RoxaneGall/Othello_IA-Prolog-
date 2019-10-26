@@ -15,11 +15,13 @@ play() :-  nl,
 
 choosePlayer(Player) :- tryChoosePlayer(Player).
 
-tryChoosePlayer(Player) :- write("Choisissez la nature du joueur (choix possibles: humain, firstMove) "), read(Player), player(Player).
+tryChoosePlayer(Player) :- write("Choisissez la nature du joueur (choix possibles: humain, firstMove, aleatoire, minimax4) "), read(Player), player(Player).
 tryChoosePlayer(Player) :- write("Player inconnu, "), tryChoosePlayer(Player).
 
 player(humain).
 player(firstMove).
+player(aleatoire).
+player(minimax4).
 
 % Ex�cution d'un tour de jeu
 
@@ -47,6 +49,23 @@ play(Grid, Player, firstMove, Player2) :-
     nextPlayer(Player,NextPlayer), 
     displayGrid(NewGrid,NextPlayer), !, 
     play(NewGrid,NextPlayer,Player2,firstMove).
+
+%IA qui effectue un mouvement aléatoire 
+play(Grid, Player, aleatoire, Player2) :-
+	repeat,
+	random(1,9,Line), 
+	random(1,9, Column),
+	existingMove(Line,Column), 
+    isValidMove(Grid,Line,Column,Player),
+    doMove(Grid,Line,Column,Player,NewGrid), 
+    nextPlayer(Player,NextPlayer), 
+    displayGrid(NewGrid,NextPlayer), !, 
+    play(NewGrid,NextPlayer,Player2,firstMove).
+
+ %IA en profondeur 
+%play(Grid, Player, minimax4, Player2) :-
+	%.
+
 
 %Passer son tour
 play(Grid, Player, Player1, Player2) :-
