@@ -64,7 +64,7 @@ doMove(Grid,Line,Column,Player,FinalGrid) :-
     tryMove(NewGrid7,Line,Column,FinalGrid,basGauche).
 
 direction(bas).
-direction(basDroite). %test
+direction(basDroite).
 direction(droite).
 direction(hautDroite).
 direction(haut).
