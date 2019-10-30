@@ -9,6 +9,9 @@ play() :-  nl,
     write(Player1),
     write(" vs "),
     write(Player2), nl,
+    play(Player1,Player2).
+
+play(Player1,Player2) :- 
     initialGrid(Grid),
     displayGrid(Grid,x),
     play(Grid,x,Player1,Player2).
@@ -28,6 +31,8 @@ player(minimax4).
 % Cas o� le jeu est fini : endGame(grid, player) v�rifie si le plateau
 % complet ou si le joueur n'a plus de jeton
 % announce(player) annonce le gagnant.
+
+%Génériser les play et mettre les differents modes de jeux dans des fichiers séparés
 
 play(Grid, CurrentPlayer, Player1, Player2) :- 
     endGame(Grid), 
@@ -50,17 +55,14 @@ play(Grid, Player, firstMove, Player2) :-
     displayGrid(NewGrid,NextPlayer), !, 
     play(NewGrid,NextPlayer,Player2,firstMove).
 
-%IA qui effectue un mouvement aléatoire 
+%IA qui effectue un mouvement aléatoire
 play(Grid, Player, aleatoire, Player2) :-
-	repeat,
-	random(1,9,Line), 
-	random(1,9, Column),
-	existingMove(Line,Column), 
-    isValidMove(Grid,Line,Column,Player),
+    canMove(Grid, Player), %s'assure qu'il existe un mouvement possible
+    chooseRandomMove(Grid, Player, Line, Column),
     doMove(Grid,Line,Column,Player,NewGrid), 
     nextPlayer(Player,NextPlayer), 
     displayGrid(NewGrid,NextPlayer), !, 
-    play(NewGrid,NextPlayer,Player2,firstMove).
+    play(NewGrid,NextPlayer,Player2,aleatoire).
 
  %IA en profondeur 
 %play(Grid, Player, minimax4, Player2) :-
@@ -72,6 +74,14 @@ play(Grid, Player, Player1, Player2) :-
     nextPlayer(Player,NextPlayer),
     write(Player1), write(" ("), write(Player), write(") PASSE SON TOUR!"), nl,
     play(Grid,NextPlayer,Player2,Player1).
+
+%Choisi un mouvement Random en supposant qu'il en existe un
+chooseRandomMove(Grid, Player, Line, Column) :-
+    repeat,
+	random(1,9,Line), 
+	random(1,9, Column),
+	existingMove(Line,Column), 
+    isValidMove(Grid,Line,Column,Player).
 
 % Passage au joueur oppos�
 nextPlayer(x,o).
