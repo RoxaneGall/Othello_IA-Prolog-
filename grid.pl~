@@ -1,4 +1,3 @@
-%Grille initiale
 initialGrid([
 [" ", "A", "B", "C", "D", "E", "F", "G", "H"," "],
 ["1", "-", "-", "-", "-", "-", "-", "-", "-"," "],
@@ -12,36 +11,28 @@ initialGrid([
 [" ", " ", " ", " ", " ", " ", " ", " ", " "," "]
 ]).
 
-
-%Affichage (grille et ligne)
 displayGrid(Grid,Player) :-
     length(Grid,Nblines),
     nl, write("  AU TOUR DES "), write(Player), nl, nl,
     forall(between(1, Nblines, Line), (nth1(Line,Grid,CharList), displayRow(CharList), nl)),
     nl.
 
-displayRow(CharList) :-
+displayRow(CharList) :- 
     length(CharList,Nbcol),
     write("  "),
-    forall(between(1, Nbcol, Col),(nth1(Col,CharList,Char), write(Char), write(" "))).
-
-
-%Edition (grille et ligne)
-editGrid(NewChar,Lin,Col,Grid,NewGrid) :- editGrid(NewChar,0,Lin,Col,Grid,NewGrid).
-editGrid(NewChar,CurrentLin,Lin,Col,[Head|Tail],[Head|Grid_out]) :- CurrentLin\==Lin, incr(CurrentLin,NextLin), editGrid(NewChar,NextLin,Lin,Col,Tail,Grid_out).
-editGrid(NewChar,CurrentLin,CurrentLin,Col,[CharList|Tail],[NewCharList|Grid_out]) :- incr(CurrentLin,NextLin), editRow(NewChar,Col,CharList,NewCharList),editGrid(NewChar,NextLin,CurrentLin,Col,Tail,Grid_out).
-editGrid(_,_,_,_,[],[]).
+    forall(between(1, Nbcol, Col),(nth1(Col,CharList,Char), write(Char), write(" "))). 
 
 editRow(NewChar,Col,CharList,NewCharList) :- editRow(NewChar,0,Col,CharList,NewCharList).
 editRow(NewChar,CurrentCol,Col,[Head|Tail],[Head|CharList_out]) :- CurrentCol\==Col, incr(CurrentCol,NextCol), editRow(NewChar,NextCol,Col,Tail,CharList_out).
 editRow(NewChar,CurrentCol,CurrentCol,[_|Tail],[NewChar|CharList_out]) :- incr(CurrentCol,NextCol), editRow(NewChar,NextCol,CurrentCol,Tail,CharList_out).
 editRow(_,_,_,[],[]).
 
+editGrid(NewChar,Lin,Col,Grid,NewGrid) :- editGrid(NewChar,0,Lin,Col,Grid,NewGrid).
+editGrid(NewChar,CurrentLin,Lin,Col,[Head|Tail],[Head|Grid_out]) :- CurrentLin\==Lin, incr(CurrentLin,NextLin), editGrid(NewChar,NextLin,Lin,Col,Tail,Grid_out).
+editGrid(NewChar,CurrentLin,CurrentLin,Col,[CharList|Tail],[NewCharList|Grid_out]) :- incr(CurrentLin,NextLin), editRow(NewChar,Col,CharList,NewCharList),editGrid(NewChar,NextLin,CurrentLin,Col,Tail,Grid_out).
+editGrid(_,_,_,_,[],[]).
 
-%isValidMove(grid,line,col,player):
-% verifie que la place choisie est libre (isEmpty/3),
-% verifie que des jetons adverses sont manges(canFlipOpponentTokens/6).
-isValidMove(Grid,Line,Column,Player) :-
+isValidMove(Grid,Line,Column,Player) :- 
     isEmpty(Grid,Line,Column),
     direction(Dir),
     canFlipOpponentTokens(0,Grid,Line,Column,Player,Dir).
@@ -55,14 +46,12 @@ canFlipOpponentTokens(NbTokenMoved,Grid,Lin,Col,Player,Direction) :-
     incr(NbTokenMoved,NewNbTokenMoved),
     canFlipOpponentTokens(NewNbTokenMoved,Grid,NextLin,NextCol,Player,Direction).
 
-canFlipOpponentTokens(NbTokenMoved,Grid,Lin,Col,Player,Direction) :-
+canFlipOpponentTokens(NbTokenMoved,Grid,Lin,Col,Player,Direction) :- 
     direction(Direction, Lin, Col, NextLin, NextCol),
     element(Grid,NextLin,NextCol,Token2),
     equal(Player,Token2),
     NbTokenMoved\==0.
 
-
-%Modification de la grille
 doMove(Grid,Line,Column,Player,FinalGrid) :-
     editGrid(Player,Line,Column,Grid,NewGrid),
     tryMove(NewGrid,Line,Column,NewGrid1,bas),
@@ -74,12 +63,25 @@ doMove(Grid,Line,Column,Player,FinalGrid) :-
     tryMove(NewGrid6,Line,Column,NewGrid7,gauche),
     tryMove(NewGrid7,Line,Column,FinalGrid,basGauche).
 
+direction(bas).
+direction(basDroite).
+direction(droite).
+direction(hautDroite).
+direction(haut).
+direction(hautGauche).
+direction(gauche).
+direction(basGauche).
 
-tryMove(Grid,Lin,Col,FinalGrid,Direction) :- move(Grid,Lin,Col,FinalGrid,Direction).
-tryMove(Grid,_,_,Grid,_).
+direction(bas,Lin,Col,NextLin,Col) :- incr(Lin,NextLin).
+direction(basDroite,Lin,Col,NextLin,NextCol) :- incr(Lin,NextLin), incr(Col,NextCol).
+direction(droite,Lin,Col,Lin,NextCol) :- incr(Col,NextCol).
+direction(hautDroite,Lin,Col,NextLin,NextCol) :- incr(Col,NextCol), decr(Lin,NextLin).
+direction(haut,Lin,Col,NextLin,Col) :- decr(Lin,NextLin).
+direction(hautGauche,Lin,Col,NextLin,NextCol) :- decr(Lin,NextLin), decr(Col,NextCol).
+direction(gauche,Lin,Col,Lin,NextCol) :- decr(Col,NextCol).
+direction(basGauche,Lin,Col,NextLin,NextCol) :- incr(Lin,NextLin), decr(Col,NextCol).
 
-
-move(Grid,Lin,Col,FinalGrid,Direction) :-
+move(Grid,Lin,Col,FinalGrid,Direction) :- 
     direction(Direction, Lin, Col, NextLin, NextCol),
     element(Grid,Lin,Col,Token1),
     element(Grid,NextLin,NextCol,Token2),
@@ -87,14 +89,15 @@ move(Grid,Lin,Col,FinalGrid,Direction) :-
     editGrid(Token1,NextLin,NextCol,Grid,NewGrid),
     move(NewGrid,NextLin,NextCol,FinalGrid,Direction).
 
-move(FinalGrid,Lin,Col,FinalGrid,Direction) :-
+move(FinalGrid,Lin,Col,FinalGrid,Direction) :- 
     direction(Direction, Lin, Col, NextLin, NextCol),
     element(FinalGrid,Lin,Col,Token1),
     element(FinalGrid,NextLin,NextCol,Token2),
     equal(Token1,Token2).
 
+winner(Nx,No,x) :- Nx > No.
+winner(Nx,No,o) :- Nx < No.
 
-%Fin de partie
 getPlayerNature(x,x, Winner, _, Winner).
 getPlayerNature(o,x, _, Winner, Winner).
 getPlayerNature(o,o, Winner, _, Winner).
@@ -118,46 +121,22 @@ countTokens([Head|Tail], Player, N, FinalN) :-
 
 countTokens([],_,N,N).
 
-countTokensInRow([Head|Tail], Player, N, FinalN) :-
+countTokensInRow([Head|Tail], Player, N, FinalN) :- 
     equal(Head,Player),
     incr(N,NewN),
     countTokensInRow(Tail,Player,NewN,FinalN).
-
+    
 countTokensInRow([_|Tail], Player, N, FinalN) :- countTokensInRow(Tail,Player,N,FinalN).
 countTokensInRow([],_,N,N).
 
-
-
-%Regles
-canFlip(x,o).
-canFlip(o,x).
-
-winner(Nx,No,x) :- Nx > No.
-winner(Nx,No,o) :- Nx < No.
-
-
-%Outils
-direction(bas).
-direction(basDroite).
-direction(droite).
-direction(hautDroite).
-direction(haut).
-direction(hautGauche).
-direction(gauche).
-direction(basGauche).
-
-direction(bas,Lin,Col,NextLin,Col) :- incr(Lin,NextLin).
-direction(basDroite,Lin,Col,NextLin,NextCol) :- incr(Lin,NextLin), incr(Col,NextCol).
-direction(droite,Lin,Col,Lin,NextCol) :- incr(Col,NextCol).
-direction(hautDroite,Lin,Col,NextLin,NextCol) :- incr(Col,NextCol), decr(Lin,NextLin).
-direction(haut,Lin,Col,NextLin,Col) :- decr(Lin,NextLin).
-direction(hautGauche,Lin,Col,NextLin,NextCol) :- decr(Lin,NextLin), decr(Col,NextCol).
-direction(gauche,Lin,Col,Lin,NextCol) :- decr(Col,NextCol).
-direction(basGauche,Lin,Col,NextLin,NextCol) :- incr(Lin,NextLin), decr(Col,NextCol).
+tryMove(Grid,Lin,Col,FinalGrid,Direction) :- move(Grid,Lin,Col,FinalGrid,Direction).
+tryMove(Grid,_,_,Grid,_).
 
 element(Grid,Line,Col,Element) :- nth0(Line,Grid,CharList), nth0(Col,CharList,Element).
 
 equal(Token,Token).
+canFlip(x,o).
+canFlip(o,x).
 
 incr(X, X1) :- X1 is X+1.
 decr(X, X1) :- X1 is X-1.
