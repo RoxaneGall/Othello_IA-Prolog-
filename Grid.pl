@@ -38,7 +38,7 @@ editRow(NewChar,CurrentCol,CurrentCol,[_|Tail],[NewChar|CharList_out]) :- incr(C
 editRow(_,_,_,[],[]).
 
 
-%isValidMove(grid,line,col,player):
+%isValidMove/4:
 % verifie que la place choisie est libre (isEmpty/3),
 % verifie que des jetons adverses sont manges(canFlipOpponentTokens/6).
 isValidMove(Grid,Line,Column,Player) :-
@@ -127,7 +127,6 @@ countTokensInRow([_|Tail], Player, N, FinalN) :- countTokensInRow(Tail,Player,N,
 countTokensInRow([],_,N,N).
 
 
-
 %Regles
 canFlip(x,o).
 canFlip(o,x).
@@ -161,3 +160,21 @@ equal(Token,Token).
 
 incr(X, X1) :- X1 is X+1.
 decr(X, X1) :- X1 is X-1.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
