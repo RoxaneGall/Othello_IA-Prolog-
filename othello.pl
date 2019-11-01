@@ -1,9 +1,10 @@
-% Initiatisation
+% Initialisation
+
 play() :-  nl,
     write("PLAYER1 (x):"), nl,
-    choosePlayer(Player1), nl,
+    tryChoosePlayer(Player1), nl,
     write("PLAYER2 (o):"), nl,
-    choosePlayer(Player2), nl,
+    tryChoosePlayer(Player2), nl,
     write(" -> "),
     write(Player1),
     write(" vs "),
@@ -15,25 +16,24 @@ play(Player1,Player2) :-
     displayGrid(Grid,x),
     play(Grid,x,Player1,Player2).
 
-choosePlayer(Player) :- tryChoosePlayer(Player).
-
-tryChoosePlayer(Player) :- write("Choisissez la nature du joueur (choix possibles: humain, firstMove, aleatoire, minimax4) "), read(Player), player(Player).
-tryChoosePlayer(Player) :- write("Player inconnu, "), tryChoosePlayer(Player).
+tryChoosePlayer(Player) :- write("Choisissez la nature du joueur (choix possibles: humain, firstMove, aleatoire, minimax) :"), read(Player), player(Player).
+tryChoosePlayer(Player) :- write("Player inconnu ! "), tryChoosePlayer(Player).
 
 player(humain).
 player(firstMove).
 player(aleatoire).
-player(minimax4).
-
+player(minimax).
 
 % Execution d'un tour de jeu
 
-% Cas ou le jeu est fini : endGame(grid, player) verifie si le plateau
-% complet ou si le joueur n'a plus de jeton
+% Cas où le jeu est fini :
+% endGame(grid, player) verifie si le plateau est complet, si le joueur
+% n'a plus de jeton ou s'il n'a pas de coup possible
 % announce(player) annonce le gagnant.
 
 % Generiser les play et mettre les differents modes de jeux dans des
 % fichiers separes
+
 play(Grid, CurrentPlayer, Player1, Player2) :-
     endGame(Grid),
     announceWinner(Grid, CurrentPlayer, Player1, Player2), !.
@@ -64,17 +64,13 @@ play(Grid, Player, aleatoire, Player2) :-
     displayGrid(NewGrid,NextPlayer), !,
     play(NewGrid,NextPlayer,Player2,aleatoire).
 
-chooseRandomMove(Grid, Player, Line, Column) :-
-    repeat,
-	random(1,9,Line),
-	random(1,9, Column),
-	existingMove(Line,Column),
-    isValidMove(Grid,Line,Column,Player).
-
- %IA en profondeur
-%play(Grid, Player, minimax4, Player2) :-
-	%.
-
+%IA en profondeur
+play(Grid, Player, minimax, Player2) :-
+    canMove(Grid, Player), %s'assure qu'il existe un mouvement possible
+    max(Grid, 3, Player,NewGrid,-61), % 1 est la profondeur pour laquelle on exécute l'algo miniMax
+    nextPlayer(Player,NextPlayer),
+    displayGrid(NewGrid,NextPlayer), !,
+    play(NewGrid,NextPlayer,Player2,minimax).
 
 %Passer son tour
 play(Grid, Player, Player1, Player2) :-
@@ -82,17 +78,29 @@ play(Grid, Player, Player1, Player2) :-
     write(Player1), write(" ("), write(Player), write(") PASSE SON TOUR!"), nl,
     play(Grid,NextPlayer,Player2,Player1).
 
+%Choisi un mouvement Random en supposant qu'il en existe un
+chooseRandomMove(Grid, Player, Line, Column) :-
+    repeat,
+	random(1,9,Line),
+	random(1,9, Column),
+	existingMove(Line,Column),
+    isValidMove(Grid,Line,Column,Player).
 
 % Passage au joueur oppose
 nextPlayer(x,o).
 nextPlayer(o,x).
 
+%
 canMove(Grid, Player) :-
     existingMove(Line,Column),
     isValidMove(Grid,Line,Column,Player).
 
+% Conditions de fin du jeu endGame(Grid)
+endGame(Grid) :-
+    \+ canMove(Grid,o),
+    \+ canMove(Grid,x).
 
-% Gestion des mouvements
+
 chooseMove(Grid,Line,Column,Player) :- tryChooseMove(Grid,Line,Column,Player).
 
 tryChooseMove(Grid,Line,Column,Player) :-
@@ -108,13 +116,8 @@ tryChooseMove(Grid,Line,Column,Player) :-
     tryChooseMove(Grid,Line,Column,Player).
 
 
-% Condition de fin du jeu endGame/1
-endGame(Grid) :-
-    \+ canMove(Grid,o),
-    \+ canMove(Grid,x).
-
-
-% Outils
+% Les mouvements possibles : letterToNum permet de convertir une lettre
+% en chiffre
 letterToNum(a,1).
 letterToNum(b,2).
 letterToNum(c,3).
@@ -133,7 +136,7 @@ existingPosition(6).
 existingPosition(7).
 existingPosition(8).
 
-% existingMove/2 verifie que ligne et colonne rentrees sont
+% existingMove(l,c) verifie que ligne et colonne rentrees sont
 % comprises dans [a,h] et [1,8]
 existingMove(Number,Column) :-
     existingPosition(Number),
@@ -143,16 +146,4 @@ existingMove(Number,Letter,Number,Column) :-
     existingPosition(Number),
     letterToNum(Letter,Column),
     existingPosition(Column).
-
-
-
-
-
-
-
-
-
-
-
-
 
