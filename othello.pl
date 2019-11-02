@@ -67,7 +67,7 @@ play(Grid, Player, aleatoire, Player2) :-
 %IA en profondeur
 play(Grid, Player, minimax, Player2) :-
     canMove(Grid, Player), %s'assure qu'il existe un mouvement possible
-    max(Grid, 3, Player,NewGrid,-61), % 1 est la profondeur pour laquelle on exécute l'algo miniMax
+    max(Grid, 3, Player,NewGrid,-65), % 1 est la profondeur pour laquelle on exécute l'algo miniMax
     nextPlayer(Player,NextPlayer),
     displayGrid(NewGrid,NextPlayer), !,
     play(NewGrid,NextPlayer,Player2,minimax).
