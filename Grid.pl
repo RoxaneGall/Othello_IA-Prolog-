@@ -14,9 +14,9 @@ initialGrid([
 
 
 %Affichage (grille et ligne)
-displayGrid(Grid,Player) :-
+displayGrid(Grid,Token) :-
     length(Grid,Nblines),
-    nl, write("  AU TOUR DES "), write(Player), nl, nl,
+    nl, write("  AU TOUR DES "), write(Token), nl, nl,
     forall(between(1, Nblines, Line), (nth1(Line,Grid,CharList), displayRow(CharList), nl)),
     nl.
 
@@ -28,13 +28,24 @@ displayRow(CharList) :-
 
 %Edition (grille et ligne)
 editGrid(NewChar,Lin,Col,Grid,NewGrid) :- editGrid(NewChar,0,Lin,Col,Grid,NewGrid).
-editGrid(NewChar,CurrentLin,Lin,Col,[Head|Tail],[Head|Grid_out]) :- CurrentLin\==Lin, incr(CurrentLin,NextLin), editGrid(NewChar,NextLin,Lin,Col,Tail,Grid_out).
-editGrid(NewChar,CurrentLin,CurrentLin,Col,[CharList|Tail],[NewCharList|Grid_out]) :- incr(CurrentLin,NextLin), editRow(NewChar,Col,CharList,NewCharList),editGrid(NewChar,NextLin,CurrentLin,Col,Tail,Grid_out).
+editGrid(NewChar,CurrentLin,Lin,Col,[Head|Tail],[Head|Grid_out]) :- 
+    CurrentLin\==Lin, 
+    incr(CurrentLin,NextLin), 
+    editGrid(NewChar,NextLin,Lin,Col,Tail,Grid_out).
+editGrid(NewChar,CurrentLin,CurrentLin,Col,[CharList|Tail],[NewCharList|Grid_out]) :- 
+    incr(CurrentLin,NextLin), 
+    editRow(NewChar,Col,CharList,NewCharList),
+    editGrid(NewChar,NextLin,CurrentLin,Col,Tail,Grid_out).
 editGrid(_,_,_,_,[],[]).
 
 editRow(NewChar,Col,CharList,NewCharList) :- editRow(NewChar,0,Col,CharList,NewCharList).
-editRow(NewChar,CurrentCol,Col,[Head|Tail],[Head|CharList_out]) :- CurrentCol\==Col, incr(CurrentCol,NextCol), editRow(NewChar,NextCol,Col,Tail,CharList_out).
-editRow(NewChar,CurrentCol,CurrentCol,[_|Tail],[NewChar|CharList_out]) :- incr(CurrentCol,NextCol), editRow(NewChar,NextCol,CurrentCol,Tail,CharList_out).
+editRow(NewChar,CurrentCol,Col,[Head|Tail],[Head|CharList_out]) :- 
+    CurrentCol\==Col,
+    incr(CurrentCol,NextCol), 
+    editRow(NewChar,NextCol,Col,Tail,CharList_out).
+editRow(NewChar,CurrentCol,CurrentCol,[_|Tail],[NewChar|CharList_out]) :- 
+    incr(CurrentCol,NextCol), 
+    editRow(NewChar,NextCol,CurrentCol,Tail,CharList_out).
 editRow(_,_,_,[],[]).
 
 
@@ -50,15 +61,15 @@ isEmpty(Grid,Line,Column) :- element(Grid,Line,Column,"-").
 
 canFlipOpponentTokens(NbTokenMoved,Grid,Lin,Col,Player,Direction) :-
     direction(Direction, Lin, Col, NextLin, NextCol),
-    element(Grid,NextLin,NextCol,Token2),
-    canFlip(Player,Token2),
+    element(Grid,NextLin,NextCol,Token),
+    canFlip(Player,Token),
     incr(NbTokenMoved,NewNbTokenMoved),
     canFlipOpponentTokens(NewNbTokenMoved,Grid,NextLin,NextCol,Player,Direction).
 
 canFlipOpponentTokens(NbTokenMoved,Grid,Lin,Col,Player,Direction) :-
     direction(Direction, Lin, Col, NextLin, NextCol),
-    element(Grid,NextLin,NextCol,Token2),
-    equal(Player,Token2),
+    element(Grid,NextLin,NextCol,Token),
+    equal(Player,Token),
     NbTokenMoved\==0.
 
 
@@ -100,11 +111,11 @@ getPlayerNature(o,x, _, Winner, Winner).
 getPlayerNature(o,o, Winner, _, Winner).
 getPlayerNature(x,o, _, Winner, Winner).
 
-announceWinner(Grid, CurrentPlayer, Player1, Player2) :-
+announceWinner(Grid, CurrentToken, CurrentPlayerNature, NextPlayerNature) :-
     countTokens(Grid, x, 0, Nx),
     countTokens(Grid, o, 0, No),
     winner(Nx,No,Winner),
-    getPlayerNature(Winner, CurrentPlayer, Player1, Player2, WinnerNature),
+    getPlayerNature(Winner, CurrentToken, CurrentPlayerNature, NextPlayerNature, WinnerNature),
     write("       x: "), write(Nx), nl,
     write("       o: "), write(No), nl,
     write("       WINNER IS : "), write(WinnerNature), write(" ("), write(Winner), write(")."),nl,nl.
@@ -112,18 +123,18 @@ announceWinner(Grid, CurrentPlayer, Player1, Player2) :-
 announceWinner(_, _, _, _) :-
     write("THERE IS NO WINNER").
 
-countTokens([Head|Tail], Player, N, FinalN) :-
-    countTokensInRow(Head, Player, N, NewN),
-    countTokens(Tail, Player, NewN, FinalN).
+countTokens([Head|Tail], Token, N, FinalN) :-
+    countTokensInRow(Head, Token, N, NewN),
+    countTokens(Tail, Token, NewN, FinalN).
 
 countTokens([],_,N,N).
 
-countTokensInRow([Head|Tail], Player, N, FinalN) :-
-    equal(Head,Player),
+countTokensInRow([Head|Tail], Token, N, FinalN) :-
+    equal(Head,Token),
     incr(N,NewN),
-    countTokensInRow(Tail,Player,NewN,FinalN).
+    countTokensInRow(Tail,Token,NewN,FinalN).
 
-countTokensInRow([_|Tail], Player, N, FinalN) :- countTokensInRow(Tail,Player,N,FinalN).
+countTokensInRow([_|Tail], Token, N, FinalN) :- countTokensInRow(Tail,Token,N,FinalN).
 countTokensInRow([],_,N,N).
 
 
@@ -160,21 +171,3 @@ equal(Token,Token).
 
 incr(X, X1) :- X1 is X+1.
 decr(X, X1) :- X1 is X-1.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -4,24 +4,24 @@
 %
 % Grid est la grille sur laquelle l'IA doit jouer
 %
-% Depth est la profondeur càd le nb de tours futurs pour lesquels on va
-% évaluer tous les coups possibles afin d'optimiser ce que l'IA doit
+% Depth est la profondeur cï¿½d le nb de tours futurs pour lesquels on va
+% ï¿½valuer tous les coups possibles afin d'optimiser ce que l'IA doit
 % jouer
 %
-% Player est au départ le joueur correspondant à l'IA, puis il
-% représente l'autre joueur quand on évalue le coup de l'adversaire
+% Player est au dï¿½part le joueur correspondant ï¿½ l'IA, puis il
+% reprï¿½sente l'autre joueur quand on ï¿½value le coup de l'adversaire
 % et ainsi de suite
 %
-% GridResult est la grille résultant du coup choisi par l'IA (ou du coup
+% GridResult est la grille rï¿½sultant du coup choisi par l'IA (ou du coup
 % choisi par l'adversaire)
 %
-% Eval est l'heuristique, qui représente ici le nombre de pions de
-% différence entre le joueur IA et le joueur adverse (par exemple si
+% Eval est l'heuristique, qui reprï¿½sente ici le nombre de pions de
+% diffï¿½rence entre le joueur IA et le joueur adverse (par exemple si
 % l'IA a 15 pions et l'adversaire 11 : eval = 4 ; si l'IA a 2 pions et
-% l'adversaire 10 : eval = -8). L'Eval min est initialisée à -65 et
-% l'Eval max à 65.
+% l'adversaire 10 : eval = -8). L'Eval min est initialisï¿½e ï¿½ -65 et
+% l'Eval max ï¿½ 65.
 
-% max : début de l'algo d'évaluation du meilleur coup à jouer pour
+% max : dï¿½but de l'algo d'ï¿½valuation du meilleur coup ï¿½ jouer pour
 % l'IA
 max(Grid, Depth, Player, GridResult,EvalMax) :-
     %write(" tryMax "), nl,
@@ -34,13 +34,13 @@ tryMax(Grid, Depth, Player, GridResult, EvalMax) :-
    Depth=0,
    tryMax(Grid, Depth, Player, GridResult,EvalMax).
 % si la profondeur est de 0
-% on évalue l'état de la grille en paramètre : Eval correspond à
+% on ï¿½value l'ï¿½tat de la grille en paramï¿½tre : Eval correspond ï¿½
 % l'heuristique
 tryMax(Grid, 0, Player,GridResult,EvalMax) :-
     %write("Depth ia ="), write(Depth), nl,
     maxHeuristic(GridResult,EvalMax,Grid,Player).
-% sinon on exécute l'algo
-% cas où on évalue pour l'ia (maximizing)
+% sinon on exï¿½cute l'algo
+% cas oï¿½ on ï¿½value pour l'ia (maximizing)
 tryMax(Grid, Depth, Player,GridResult,EvalMax) :-
     %write("Explore minimax IA "), nl,
     all_possible_moves(Player, Grid, AllMoves),
@@ -49,14 +49,14 @@ tryMax(Grid, Depth, Player,GridResult,EvalMax) :-
 % On essaie tous les move possibles
 tryMoveIA(Grid,Depth,Player,[],GridResult,EvalMax). %write("allMoves ia done"),nl.
 tryMoveIA(Grid,Depth,Player,[[Line,Col]|RemainingMoves],GridResult,EvalMax) :-
-    % pour chaque move on l'exécute puis on fait un minimax sur la nouvelle grille obtenue
+    % pour chaque move on l'exï¿½cute puis on fait un minimax sur la nouvelle grille obtenue
     %write("test Move ia : "), write(Line), write(Col), write(" Remaining :"), write(RemainingMoves), nl,
     doMove(Grid,Line,Col,Player,NewGrid),
     nextPlayer(Player,NextPlayer),
     NewDepth is Depth-1,
     mini(NewGrid, NewDepth, NextPlayer, GridResultOfMini, 65),
     % on ajoute la grille enfant retenue par l'algo mini de l'enfant
-    %write("On regarde si la grille résultat de mini est max pour l'IA"),nl,
+    %write("On regarde si la grille rï¿½sultat de mini est max pour l'IA"),nl,
     maxHeuristic(GridResult,EvalMax,GridResultOfMini,Player),
     tryMoveIA(Grid, Depth, Player, RemainingMoves, GridResult,EvalMax).
 
@@ -75,10 +75,10 @@ evaluateH1Max(Grid,Player,Eval) :-
 
 getMax(GridResult,EvalMax,Grid,Eval,Player) :-
     Eval =< EvalMax.
-    % write("La grille évaluée a une eval="),write(Eval), write(" inférieur à l'eval max")
+    % write("La grille ï¿½valuï¿½e a une eval="),write(Eval), write(" infï¿½rieur ï¿½ l'eval max")
 getMax(GridResult,EvalMax,Grid,Eval,Player) :-
     Eval>EvalMax,
-    % write("L'eval est supérieur à l'evalMax. "),
+    % write("L'eval est supï¿½rieur ï¿½ l'evalMax. "),
     maxHeuristic(Grid,Eval,Grid,Player). % on remplace GridResult par Grid et EvalMax par Eval
     %write("La grille max est celle d'eval="), write(Eval), nl
 
@@ -86,7 +86,7 @@ getMax(GridResult,EvalMax,Grid,Eval,Player) :-
 
 mini(Grid, Depth, Player, GridResult,EvalMin) :-
     %write(" tryMini "), nl,
-    %NextPossibleGrids correspond aux enfant du noeud Other, on ajoutera au fur et à mesure les grilles enfants avec leur eval d'heuristique
+    %NextPossibleGrids correspond aux enfant du noeud Other, on ajoutera au fur et ï¿½ mesure les grilles enfants avec leur eval d'heuristique
     tryMini(Grid, Depth, Player, GridResult, EvalMin), !.
 
 % Ideam que tryMax mais pour l'adversaire (minimizing)
@@ -104,14 +104,14 @@ tryMini(Grid, Depth, Player,GridResult,EvalMin) :-
 
 tryMoveOther(Grid,Depth,Player,[],GridResult,EvalMin). % :- write("allMoves other done"), nl.
 tryMoveOther(Grid,Depth,Player,[[Line,Col]|RemainingMoves],GridResult,EvalMin) :-
-    % pour chaque move on l'exécute puis on fait un minimax sur la nouvelle grille obtenue
+    % pour chaque move on l'exï¿½cute puis on fait un minimax sur la nouvelle grille obtenue
     %write("test Move other : "), write(Line), write(Col), write(" Remaining :"), write(RemainingMoves), nl,
     doMove(Grid,Line,Col,Player,NewGrid),
     nextPlayer(Player,NextPlayer),
     NewDepth is Depth-1,
     max(NewGrid, NewDepth, NextPlayer,GridResultOfMax,-65),
     % on ajoute la grille enfant retenue par l'algo max de l'enfant
-    %write("On regarde si la grille résultat de mini est max pour l'IA"),
+    %write("On regarde si la grille rï¿½sultat de mini est max pour l'IA"),
     miniHeuristic(GridResult,EvalMin,GridResultOfMax,Player),
     tryMoveOther(Grid, Depth, Player,RemainingMoves,GridResult,EvalMin).
 
@@ -129,13 +129,13 @@ evaluateH1Min(Grid,Player,Eval) :-
 
 getMin(GridResult,EvalMin,Grid,Eval) :-
     Eval >= EvalMin.
-    %write("La grille évaluée a une eval supérieur à l'eval min").
+    %write("La grille ï¿½valuï¿½e a une eval supï¿½rieur ï¿½ l'eval min").
 getMin(GridResult,EvalMin,Grid,Eval) :-
     Eval<EvalMin,
-    %write("L'eval est inférieure à l'evalMin. "),
+    %write("L'eval est infï¿½rieure ï¿½ l'evalMin. "),
     miniHeuristic(Grid,Eval,Grid,Player). % on remplace GridResult par Grid et EvalMin par Eval
 
-% Générer arbre avec toutes les coordonnées des coups valides
+% Gï¿½nï¿½rer arbre avec toutes les coordonnï¿½es des coups valides
 all_possible_moves(Player, Grid, AllMoves) :-
    %write("Tous les coups possibles pour "), write(Player),
    findall([Line, Column], isValidMove(Grid,Line,Column,Player),
