@@ -2,24 +2,28 @@
 :- consult('./play_firstMove.pl').
 :- consult('./play_aleatoire.pl').
 :- consult('./play_humain.pl').
+:- consult('./stats.pl').
 %:- consult('./play_minmax.pl').
 
 % Initialisation
-play() :-  nl,
-    write("Player1 (x):"), nl,
-    tryChoosePlayer(CurrentPlayerNature), nl,
-    write("Player2 (o):"), nl,
-    tryChoosePlayer(NextPlayerNature), nl,
-    write(" -> "),
-    write(CurrentPlayerNature),
-    write(" vs "),
-    write(NextPlayerNature), nl,
-    play(CurrentPlayerNature,NextPlayerNature).
+play() :-  
+    choosePlayers(Player1,Player2),
+    play(Player1,Player2).
 
-play(CurrentPlayerNature,NextPlayerNature) :-
+play(Player1,Player2) :-
     initialGrid(Grid),
     displayGrid(Grid,x),
-    play(Grid,x,CurrentPlayerNature,NextPlayerNature).
+    play(Grid,x,Player1,Player2).
+
+choosePlayers(Player1,Player2) :-
+    nl, write("Player1 (x):"), nl,
+    tryChoosePlayer(Player1), nl,
+    write("Player2 (o):"), nl,
+    tryChoosePlayer(Player2), nl,
+    write(" -> "),
+    write(Player1),
+    write(" vs "),
+    write(Player2), nl.
 
 tryChoosePlayer(Player) :- write("Choisissez la nature du joueur (choix possibles: humain, firstMove, aleatoire, minmax) :"), read(Player), player(Player).
 tryChoosePlayer(Player) :- write("Player inconnu ! "), tryChoosePlayer(Player).
