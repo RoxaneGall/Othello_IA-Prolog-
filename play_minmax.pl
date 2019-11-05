@@ -1,7 +1,7 @@
 
-minmax(Token,Grid,Line,Column) :- 
+minmax(Token,Grid,Line,Column) :-
     all_possible_moves(Token, Grid, AllMoves),
-    minmax(max,countMoves,Token,3,Grid,AllMoves,-inf,_,_,Line,Column,_).
+    minmax(max,countMoves,Token,2,Grid,AllMoves,-inf,_,_,Line,Column,_).
 
 
 %cas d'une grille en fin de jeu (pas de move possible d'ou [])
@@ -12,13 +12,13 @@ minmax(_,Heur,Token,_,CurrentGrid,[],_,Line,Column,Line,Column,FinalEval) :-
 %Plus de move possible ou fin du jeu
 minmax(_,_,_,_,_,[],FinalEval,FinalLine,FinalColumn,FinalLine,FinalColumn,FinalEval).
 
-minmax(Comparator,Heur,Token,0,CurrentGrid,[[Line,Column]|RemainingMoves],CurrentEval,CurrentLine,CurrentColumn,FinalLine,FinalColumn,FinalEval) :- 
+minmax(Comparator,Heur,Token,0,CurrentGrid,[[Line,Column]|RemainingMoves],CurrentEval,CurrentLine,CurrentColumn,FinalLine,FinalColumn,FinalEval) :-
     doMove(CurrentGrid,Line,Column,Token,NewGrid),
     heuristic(Heur,NewGrid,Token,Eval),
     compare(Comparator,Eval,CurrentEval,NewEval,Line,Column,CurrentLine,CurrentColumn,NewLine,NewColumn),
     minmax(Comparator,Heur,Token,0,CurrentGrid,RemainingMoves,NewEval,NewLine,NewColumn,FinalLine,FinalColumn,FinalEval).
 
-minmax(Comparator,Heur,Token,CurrentDepth,CurrentGrid,[[Line,Column]|RemainingMoves],CurrentEval,CurrentLine,CurrentColumn,FinalLine,FinalColumn,FinalEval) :- 
+minmax(Comparator,Heur,Token,CurrentDepth,CurrentGrid,[[Line,Column]|RemainingMoves],CurrentEval,CurrentLine,CurrentColumn,FinalLine,FinalColumn,FinalEval) :-
     doMove(CurrentGrid,Line,Column,Token,NewGrid),
     next(Comparator,NextComparator,NextInitEval),
     next(Token,NextToken),
