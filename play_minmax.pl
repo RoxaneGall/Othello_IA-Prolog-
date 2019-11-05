@@ -28,15 +28,13 @@ minmax(Comparator,Heur,Token,CurrentDepth,CurrentGrid,[[Line,Column]|RemainingMo
     compare(Comparator,Eval,CurrentEval,NewEval,Line,Column,CurrentLine,CurrentColumn,NewLine,NewColumn),
     minmax(Comparator,Heur,Token,CurrentDepth,CurrentGrid,RemainingMoves,NewEval,NewLine,NewColumn,FinalLine,FinalColumn,FinalEval).
 
-minmax(Comparator,Heur,Token,D,)
-
 
 
 compare(min,NewEval,CurrentEval,NewEval,L,C,_,_,L,C) :- NewEval < CurrentEval.
-compare(min,Eval,NewEval,NewEval,_,_,L,C,L,C).
+compare(min,_,NewEval,NewEval,_,_,L,C,L,C).
 
 compare(max,NewEval,CurrentEval,NewEval,L,C,_,_,L,C) :- NewEval > CurrentEval.
-compare(max,Eval,NewEval,NewEval,_,_,L,C,L,C).
+compare(max,_,NewEval,NewEval,_,_,L,C,L,C).
 
 next(min,max,-inf).
 next(max,min,inf).
