@@ -1,7 +1,7 @@
 
 minmax(Token,Grid,Line,Column) :- 
     all_possible_moves(Token, Grid, AllMoves),
-    minmax(max,h1,Token,3,Grid,AllMoves,-inf,_,_,Line,Column,_).
+    minmax(max,countMoves,Token,3,Grid,AllMoves,-inf,_,_,Line,Column,_).
 
 
 %cas d'une grille en fin de jeu (pas de move possible d'ou [])
@@ -27,7 +27,6 @@ minmax(Comparator,Heur,Token,CurrentDepth,CurrentGrid,[[Line,Column]|RemainingMo
     minmax(NextComparator,Heur,NextToken,NextDepth,NewGrid,NextDepthAllMoves,NextInitEval,Line,Column,_,_,Eval),
     compare(Comparator,Eval,CurrentEval,NewEval,Line,Column,CurrentLine,CurrentColumn,NewLine,NewColumn),
     minmax(Comparator,Heur,Token,CurrentDepth,CurrentGrid,RemainingMoves,NewEval,NewLine,NewColumn,FinalLine,FinalColumn,FinalEval).
-
 
 
 compare(min,NewEval,CurrentEval,NewEval,L,C,_,_,L,C) :- NewEval < CurrentEval.

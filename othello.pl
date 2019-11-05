@@ -5,6 +5,7 @@
 :- consult('./play_minmax.pl').
 :- consult('./utils.pl').
 :- consult('./stats.pl').
+:- consult('./heuristic.pl').
 
 :- set_prolog_stack(global, limit(10 000 000 000)).
 
