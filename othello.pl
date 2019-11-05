@@ -3,7 +3,7 @@
 :- consult('./play_aleatoire.pl').
 :- consult('./play_humain.pl').
 :- consult('./stats.pl').
-%:- consult('./play_minmax.pl').
+:- consult('./play_minmax.pl').
 
 % Initialisation
 play() :-  
@@ -42,7 +42,7 @@ player(minmax).
 %Verifier que le jeu n'est pas termine
 play(Grid, CurrentToken, CurrentPlayerNature, NextPlayerNature) :-
     endGame(Grid),
-    announceWinner(Grid, CurrentToken, CurrentPlayerNature, NextPlayerNature), !.
+    announceWinner(Grid, CurrentToken, CurrentPlayerNature, NextPlayerNature).
 
 %Jouer un tour en fonction de la nature du joueur actuel
 play(Grid, CurrentToken, CurrentPlayerNature, NextPlayerNature) :-
@@ -50,7 +50,7 @@ play(Grid, CurrentToken, CurrentPlayerNature, NextPlayerNature) :-
     moveToDo(CurrentPlayerNature,CurrentToken,Grid,Line,Column),
     doMove(Grid,Line,Column,CurrentToken,NewGrid),
     nextPlayer(CurrentToken,NextToken),
-    displayGrid(NewGrid,NextToken), !,
+    displayGrid(NewGrid,NextToken),
     play(NewGrid,NextToken,NextPlayerNature,CurrentPlayerNature).
 
 %Passer son tour si le joueur ne peut pas jouer
@@ -63,6 +63,7 @@ play(Grid, CurrentToken, CurrentPlayerNature, NextPlayerNature) :-
 moveToDo(humain,Token,Grid,Line,Column) :- humain(Token,Grid,Line,Column).
 moveToDo(aleatoire,Token,Grid,Line,Column) :- aleatoire(Token,Grid,Line,Column).
 moveToDo(firstMove,Token,Grid,Line,Column) :- firstMove(Token,Grid,Line,Column).
+moveToDo(minmax,Token,Grid,Line,Column) :- minmax(Token,Grid,Line,Column).
 
 % Passage au joueur oppose
 nextPlayer(x,o).
