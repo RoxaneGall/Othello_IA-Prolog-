@@ -2,8 +2,9 @@
 :- consult('./play_firstMove.pl').
 :- consult('./play_aleatoire.pl').
 :- consult('./play_humain.pl').
-:- consult('./stats.pl').
 :- consult('./play_minmax.pl').
+:- consult('./utils.pl').
+:- consult('./stats.pl').
 
 % Initialisation
 play() :-  

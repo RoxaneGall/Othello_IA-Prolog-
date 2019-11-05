@@ -1,7 +1,7 @@
 
 minmax(Token,Grid,Line,Column) :- 
     all_possible_moves(Token, Grid, AllMoves),
-    minmax(max,h1,Token,3,Grid,AllMoves,-inf,_,_,Line,Column,_).
+    minmax(max,h1,Token,2,Grid,AllMoves,-inf,_,_,Line,Column,_).
 
 
 %cas d'une grille en fin de jeu (pas de move possible d'ou [])
@@ -16,31 +16,27 @@ minmax(Comparator,Heur,Token,0,CurrentGrid,[[Line,Column]|RemainingMoves],Curren
     doMove(CurrentGrid,Line,Column,Token,NewGrid),
     heuristic(Heur,NewGrid,Token,Eval),
     compare(Comparator,Eval,CurrentEval,NewEval,Line,Column,CurrentLine,CurrentColumn,NewLine,NewColumn),
-    write('In Depth '),write(0),nl,
-    write('Found a possible move: '),write([Line,Column]),nl,
-    write('With an heuristic of: '),write(Eval),nl,
     minmax(Comparator,Heur,Token,0,CurrentGrid,RemainingMoves,NewEval,NewLine,NewColumn,FinalLine,FinalColumn,FinalEval).
 
 minmax(Comparator,Heur,Token,CurrentDepth,CurrentGrid,[[Line,Column]|RemainingMoves],CurrentEval,CurrentLine,CurrentColumn,FinalLine,FinalColumn,FinalEval) :- 
     doMove(CurrentGrid,Line,Column,Token,NewGrid),
     next(Comparator,NextComparator,NextInitEval),
     next(Token,NextToken),
-    decr(CurrentDepth,NextDepth),nl,
-    write('In Depth '),write(CurrentDepth),nl,
-    write('Found a possible move: '),write([Line,Column]),nl,nl,
+    decr(CurrentDepth,NextDepth),
     all_possible_moves(NextToken, NewGrid, NextDepthAllMoves),
     minmax(NextComparator,Heur,NextToken,NextDepth,NewGrid,NextDepthAllMoves,NextInitEval,Line,Column,_,_,Eval),
-    compare(Comparator,Eval,CurrentEval,NewEval,Line,Column,CurrentLine,CurrentColumn,NewLine,NewColumn),nl,
-    write('Conculision is Eval= '),write(NewEval),nl,
+    compare(Comparator,Eval,CurrentEval,NewEval,Line,Column,CurrentLine,CurrentColumn,NewLine,NewColumn),
     minmax(Comparator,Heur,Token,CurrentDepth,CurrentGrid,RemainingMoves,NewEval,NewLine,NewColumn,FinalLine,FinalColumn,FinalEval).
 
+minmax(Comparator,Heur,Token,D,)
+
+
+
 compare(min,NewEval,CurrentEval,NewEval,L,C,_,_,L,C) :- NewEval < CurrentEval.
-compare(min,Eval,NewEval,NewEval,_,_,L,C,L,C) :- NewEval < Eval.
-compare(min,_,NewEval,NewEval,_,_,L,C,L,C).
+compare(min,Eval,NewEval,NewEval,_,_,L,C,L,C).
 
 compare(max,NewEval,CurrentEval,NewEval,L,C,_,_,L,C) :- NewEval > CurrentEval.
-compare(max,Eval,NewEval,NewEval,_,_,L,C,L,C) :- NewEval > Eval.
-compare(max,_,NewEval,NewEval,_,_,L,C,L,C).
+compare(max,Eval,NewEval,NewEval,_,_,L,C,L,C).
 
 next(min,max,-inf).
 next(max,min,inf).
@@ -54,8 +50,22 @@ all_possible_moves(Token, Grid, AllMoves) :-
    AllMoves).
 all_possible_moves(_, _, []).
 
+%to improve performance we cache the results and try to retrieve it
+
+heuristic(Heur,Grid,Token,Eval) :-
+    variant_hash([Heur,Grid,Token],Key),
+    get(Key, Eval).
+
+heuristic(Heur,Grid,Token,Eval) :-
+    next(Token,Opponent),
+    variant_hash([Heur,Grid,Opponent],Key),
+    get(Key, OpponentEval),
+    Eval is OpponentEval * -1.
+
 heuristic(h1,Grid,Token,Eval) :-
     countTokens(Grid, Token, 0, NbTokensCurrentPlayer),
     nextPlayer(Token,Opponent),
     countTokens(Grid, Opponent, 0, NbTokensOpponent),
-    Eval is NbTokensCurrentPlayer-NbTokensOpponent.
+    Eval is NbTokensCurrentPlayer-NbTokensOpponent,
+    variant_hash([h1,Grid,Token],Key),
+    set(Key, Eval).
