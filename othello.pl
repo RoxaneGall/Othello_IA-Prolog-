@@ -6,6 +6,8 @@
 :- consult('./utils.pl').
 :- consult('./stats.pl').
 
+:- set_prolog_stack(global, limit(10 000 000 000)).
+
 % Initialisation
 play() :-  
     choosePlayers(Player1,Player2),

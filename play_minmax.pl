@@ -1,7 +1,7 @@
 
 minmax(Token,Grid,Line,Column) :- 
     all_possible_moves(Token, Grid, AllMoves),
-    minmax(max,h1,Token,2,Grid,AllMoves,-inf,_,_,Line,Column,_).
+    minmax(max,h1,Token,3,Grid,AllMoves,-inf,_,_,Line,Column,_).
 
 
 %cas d'une grille en fin de jeu (pas de move possible d'ou [])
