@@ -1,7 +1,7 @@
 
 minmax(Token,Grid,Line,Column) :-
     all_possible_moves(Token, Grid, AllMoves),
-    minmax(max,countMoves,Token,3,Grid,AllMoves,-inf,_,_,Line,Column,_).
+    minmax(max,countTokens,Token,3,Grid,AllMoves,-inf,_,_,Line,Column,_).
 
 %Plus de move possibles
 minmax(_,_,_,_,_,[],FinalEval,FinalLine,FinalColumn,FinalLine,FinalColumn,FinalEval).
@@ -64,7 +64,6 @@ minmax(Comparator,Heur,Token,CurrentDepth,CurrentGrid,[[Line,Column]|RemainingMo
     %variant_hash([Comparator,Heur,CurrentDepth,CurrentGrid,Token,Line,Column],Key),
     %set(Key, Eval),
     minmax(Comparator,Heur,Token,CurrentDepth,CurrentGrid,RemainingMoves,NewEval,NewLine,NewColumn,FinalLine,FinalColumn,FinalEval).
-
 
 
 compare(min,NewEval,CurrentEval,NewEval,L,C,_,_,L,C) :- NewEval < CurrentEval.
