@@ -30,7 +30,6 @@ heuristic(countCorners,Grid,Token,Eval) :-
         Eval is Nb_CornersMax - Nb_CornersMin.
 
 heuristic(stability,Grid,Token,Eval):-
-                   write("************************"),
                    gridToLine(Grid, AsLine),
                    stability_weights(Stability_line),
                    nextPlayer(Token,Opponent),

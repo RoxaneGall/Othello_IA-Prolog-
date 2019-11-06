@@ -75,16 +75,16 @@ moveToDo(aleatoire,Token,Grid,Line,Column) :- aleatoire(Token,Grid,Line,Column).
 moveToDo(firstMove,Token,Grid,Line,Column) :- firstMove(Token,Grid,Line,Column).
 moveToDo(mMCountTokens,Token,Grid,Line,Column) :- 
     allPossibleMoves(Token,Grid,AllMoves),
-    evaluateAndChoose(countTokens,Token,AllMoves,2,Grid,Token,1,((_,_),-10000),((Line,Column),_)).
+    evaluateAndChoose(countTokens,Token,AllMoves,3,Grid,Token,1,((_,_),-10000),((Line,Column),_)).
 moveToDo(mMCountMoves,Token,Grid,Line,Column) :- 
     allPossibleMoves(Token,Grid,AllMoves),
-    evaluateAndChoose(countMoves,Token,AllMoves,2,Grid,Token,1,((_,_),-10000),((Line,Column),_)).
+    evaluateAndChoose(countMoves,Token,AllMoves,3,Grid,Token,1,((_,_),-10000),((Line,Column),_)).
 moveToDo(mMCountCorners,Token,Grid,Line,Column) :- 
     allPossibleMoves(Token,Grid,AllMoves),
-    evaluateAndChoose(countCorners,Token,AllMoves,2,Grid,Token,1,((_,_),-10000),((Line,Column),_)).
+    evaluateAndChoose(countCorners,Token,AllMoves,3,Grid,Token,1,((_,_),-10000),((Line,Column),_)).
 moveToDo(mMStabilite,Token,Grid,Line,Column) :- 
     allPossibleMoves(Token,Grid,AllMoves),
-    evaluateAndChoose(stabilite,Token,AllMoves,2,Grid,Token,1,((_,_),-10000),((Line,Column),_)).
+    evaluateAndChoose(stability,Token,AllMoves,3,Grid,Token,1,((_,_),-10000),((Line,Column),_)).
 %moveToDo(minmax,Token,Grid,Line,Column) :- minmax(Token,Grid,Line,Column).
 
 % Passage au joueur oppose
