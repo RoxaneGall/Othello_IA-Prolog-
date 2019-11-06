@@ -7,6 +7,13 @@ heuristic(endGame,Grid,Token,Eval) :-
     countTokens(Grid, Opponent, 0, Nb2),
     isWinner(Nb1,Nb2,Eval).
 
+heuristic(global,Grid,Token,Eval) :- 
+    heuristic(countTokens,Grid,Token,Eval1),
+    heuristic(countMoves,Grid,Token,Eval2),
+    heuristic(countCorners,Grid,Token,Eval3),
+    heuristic(stability,Grid,Token,Eval4),
+    Eval is Eval1*4 + Eval2*2 + Eval3*5 + Eval4*3.
+
 heuristic(countTokens,Grid,Token,Eval) :-
     countTokens(Grid, Token, 0, NbTokensCurrentPlayer),
     nextPlayer(Token,Opponent),
@@ -18,8 +25,7 @@ heuristic(countMoves,Grid,Token,Eval) :-
     length(AllMovesMax, Nb_MaxMoves),
     nextPlayer(Token,Opponent),
     all_possible_moves(Opponent, Grid, AllMovesMin), length(AllMovesMin, Nb_MinMoves),
-    Eval is Nb_MaxMoves - Nb_MinMoves,
-    nl, write(Eval).
+    Eval is Nb_MaxMoves - Nb_MinMoves.
 
 heuristic(countCorners,Grid,Token,Eval) :-
         getCorners(Grid,ListCorners),   %listeCorners est une liste de 4 ï¿½lï¿½ments dans laquelle est stockï¿½e
@@ -34,9 +40,7 @@ heuristic(stability,Grid,Token,Eval):-
                    stability_weights(Stability_line),
                    nextPlayer(Token,Opponent),
                    stabilityHeuristic(AsLine,Stability_line,Token,Opponent,Res_PlayerMax,Res_PlayerMin),
-                   Eval is Res_PlayerMax - Res_PlayerMin,
-                   write("eval = "),
-                   write(Eval),nl.
+                   Eval is Res_PlayerMax - Res_PlayerMin.
 
 %Rï¿½cupï¿½ration des valeurs des coins
 getCorners(Grid,[C1,C2,C3,C4]):-
@@ -58,16 +62,12 @@ stability_weights([0,  0,   0,  0,  0,  0,  0,  0,  0, 0,
 
 stabilityHeuristic([], [],_,_, 0, 0).
 
-stabilityHeuristic([Head_grid|Tail_grid], [Head_weights|Tail_weights], Head_grid, MinPlayer,
-                   Res_PlayerMax, Res_PlayerMin) :-
-                   stabilityHeuristic(Tail_grid, Tail_weights,Head_grid, MinPlayer,
-                   Tmp_ResPlayerMax, Res_PlayerMin),!,
+stabilityHeuristic([Head_grid|Tail_grid], [Head_weights|Tail_weights], Head_grid, MinPlayer, Res_PlayerMax, Res_PlayerMin) :-
+                   stabilityHeuristic(Tail_grid, Tail_weights,Head_grid, MinPlayer, Tmp_ResPlayerMax, Res_PlayerMin),!,
                    Res_PlayerMax is Tmp_ResPlayerMax + Head_weights.
 
-stabilityHeuristic([Head_grid|Tail_grid], [Head_weights|Tail_weights],MaxPlayer,Head_grid,
-                   Res_PlayerMax, Res_PlayerMin) :-
-                   stabilityHeuristic(Tail_grid, Tail_weights,MaxPlayer, Head_grid,
-                   Res_PlayerMax, Tmp_ResPlayerMin),!,
+stabilityHeuristic([Head_grid|Tail_grid], [Head_weights|Tail_weights],MaxPlayer,Head_grid, Res_PlayerMax, Res_PlayerMin) :-
+                   stabilityHeuristic(Tail_grid, Tail_weights,MaxPlayer, Head_grid, Res_PlayerMax, Tmp_ResPlayerMin),!,
                    Res_PlayerMin is Tmp_ResPlayerMin + Head_weights.
 
 stabilityHeuristic([_|TG], [_|TW], MaxPlayer, MinPlayer, ResMax, ResMin) :-
