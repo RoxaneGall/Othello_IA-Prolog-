@@ -1,9 +1,6 @@
 %to improve performance we cache the results and try to retrieve it
-isWinner(Nb1,Nb2,1000) :- Nb1 > Nb2.
-isWinner(_,_,-10000).
 
-heuristic(_,Grid,Token,Eval) :-
-    endGame(Grid),
+heuristic(endGame,Grid,Token,Eval) :-
     next(Token,Opponent),
     countTokens(Grid, Token, 0, Nb1),
     countTokens(Grid, Opponent, 0, Nb2),
@@ -20,3 +17,7 @@ heuristic(countMoves,Grid,Token,Eval) :-
     nextPlayer(Token,Opponent),
     all_possible_moves(Opponent, Grid, AllMovesMin), length(AllMovesMin, Nb_MinMoves),
     Eval is Nb_MaxMoves - Nb_MinMoves.
+
+
+isWinner(Nb1,Nb2,1000) :- Nb1 > Nb2.
+isWinner(_,_,-10000).

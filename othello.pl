@@ -73,7 +73,7 @@ moveToDo(aleatoire,Token,Grid,Line,Column) :- aleatoire(Token,Grid,Line,Column).
 moveToDo(firstMove,Token,Grid,Line,Column) :- firstMove(Token,Grid,Line,Column).
 moveToDo(minmax2,Token,Grid,Line,Column) :- 
     allPossibleMoves(Token,Grid,AllMoves),
-    evaluateAndChoose(countTokens,AllMoves,3,Grid,Token,1,((_,_),-10000),((Line,Column),_)).
+    evaluateAndChoose(countTokens,Token,AllMoves,3,Grid,Token,1,((_,_),-10000),((Line,Column),_)).
 moveToDo(minmax,Token,Grid,Line,Column) :- minmax(Token,Grid,Line,Column).
 
 % Passage au joueur oppose
