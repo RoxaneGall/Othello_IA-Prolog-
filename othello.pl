@@ -8,6 +8,8 @@
 :- consult('./heuristic.pl').
 
 :- set_prolog_flag(stack_limit, 14 000 000 000).
+%:- set_prolog_stack(global, limit(14 000 000 000)).
+
 
 % Initialisation
 play() :-
