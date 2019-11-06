@@ -1,6 +1,6 @@
 %to improve performance we cache the results and try to retrieve it
-isWinner(Nb1,Nb2,inf) :- Nb1 > Nb2.
-isWinner(_,_,-inf).
+isWinner(Nb1,Nb2,1000) :- Nb1 > Nb2.
+isWinner(_,_,-10000).
 
 heuristic(_,Grid,Token,Eval) :-
     endGame(Grid),
