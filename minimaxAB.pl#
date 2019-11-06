@@ -1,0 +1,19 @@
+% Générer arbre avec toutes les coordonnées des coups valides
+allPossibleMoves(Player, Grid, AllMoves) :-
+   %write("Tous les coups possibles pour "), write(Player),
+   findall([Line, Column],isValidMove(Grid,Line,Column,Player),AllMoves).
+   %write(" sont "), write(AllMoves), nl.
+
+evaluateAndChoose([[Line,Column]|Moves],Grid,Player,Player2,D,Alpha,Beta,Move,BestMove):-
+   doMove(Grid,Line,Column,Player,NewGrid),
+   alphaBeta(NewGrid,Player,Player2,D,Alpha,Beta,Move,Value),
+   Value1 is -Value,
+   cutoff(Line,Column,Value1,D,Alpha,Beta,Moves,Grid,Move,BestMove).
+evaluateAndChoose([],Grid,Player,Player2,D,Alpha,Beta,Move,(Move,Alpha)).
+
+alphaBeta(Grid,Player,Player2,Alpha,Beta,Move,Value):-
+   value(Grid,Value).
+
+alphaBeta(D,Grid,Alpha,Beta,Move,Value):-
+   allPossibleMoves(Player
+   value(Grid,Value).
