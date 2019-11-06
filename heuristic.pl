@@ -1,6 +1,6 @@
 isWinner(Nb1,Nb2,100) :- Nb1 > Nb2.
 isWinner(_,_,-100).
-    
+
 heuristic(endGame,Grid,Token,Eval) :-
     next(Token,Opponent),
     countTokens(Grid, Token, 0, Nb1),
@@ -13,8 +13,8 @@ heuristic(countTokens,Grid,Token,Eval) :-
     countTokens(Grid, Opponent, 0, NbTokensOpponent),
     Eval is NbTokensCurrentPlayer-NbTokensOpponent.
 
-heuristic(countMoves,Grid,Token,Eval) :-   
-    all_possible_moves(Token, Grid, AllMovesMax), 
+heuristic(countMoves,Grid,Token,Eval) :-
+    all_possible_moves(Token, Grid, AllMovesMax),
     length(AllMovesMax, Nb_MaxMoves),
     nextPlayer(Token,Opponent),
     all_possible_moves(Opponent, Grid, AllMovesMin), length(AllMovesMin, Nb_MinMoves),
@@ -22,7 +22,7 @@ heuristic(countMoves,Grid,Token,Eval) :-
     nl, write(Eval).
 
 heuristic(countCorners,Grid,Token,Eval) :-
-        getCorners(Grid,ListCorners),   %listeCorners est une liste de 4 �l�ments dans laquelle est stock�e
+        getCorners(Grid,ListCorners),   %listeCorners est une liste de 4 ï¿½lï¿½ments dans laquelle est stockï¿½e
         %la valeur de chaque coin
         countTokensInRow(ListCorners,Token,0, Nb_CornersMax),
         nextPlayer(Token,Opponent),
@@ -34,23 +34,27 @@ heuristic(stability,Grid,Token,Eval):-
                    stability_weights(Stability_line),
                    nextPlayer(Token,Opponent),
                    stabilityHeuristic(AsLine,Stability_line,Token,Opponent,Res_PlayerMax,Res_PlayerMin),
-                   Eval is Res_PlayerMax - Res_PlayerMin.
+                   Eval is Res_PlayerMax - Res_PlayerMin,
+                   write("eval = "),
+                   write(Eval),nl.
 
-%R�cup�ration des valeurs des coins
+%Rï¿½cupï¿½ration des valeurs des coins
 getCorners(Grid,[C1,C2,C3,C4]):-
         element(Grid,1,1,C1),
         element(Grid,8,1,C2),
         element(Grid,1,8,C3),
         element(Grid,8,8,C4).
 
-stability_weights([4,  -3,  2,  2,  2,  2, -3,  4,
-                   -3, -4, -1, -1, -1, -1, -4, -3,
-                   2,  -1,  1,  0,  0,  1, -1,  2,
-                   2,  -1,  0,  1,  1,  0, -1,  2,
-                   2,  -1,  0,  1,  1,  0, -1,  2,
-                   2,  -1,  1,  0,  0,  1, -1,  2,
-                   -3, -4, -1, -1, -1, -1, -4, -3,
-                   4,  -3,  2,  2,  2,  2, -3,  4]).
+stability_weights([0,  0,   0,  0,  0,  0,  0,  0,  0, 0,
+                   0,  4,  -3,  2,  2,  2,  2, -3,  4, 0,
+                   0, -3,  -4, -1, -1, -1, -1, -4, -3, 0,
+                   0,  2,  -1,  1,  0,  0,  1, -1,  2, 0,
+                   0,  2,  -1,  0,  1,  1,  0, -1,  2, 0,
+                   0,  2,  -1,  0,  1,  1,  0, -1,  2, 0,
+                   0,  2,  -1,  1,  0,  0,  1, -1,  2, 0,
+                   0, -3,  -4, -1, -1, -1, -1, -4, -3, 0,
+                   0,  4,  -3,  2,  2,  2,  2, -3,  4, 0,
+                   0,  0,   0,  0,  0,  0,  0,  0,  0, 0]).
 
 stabilityHeuristic([], [],_,_, 0, 0).
 
@@ -76,4 +80,3 @@ gridToLine([], Res, Res).
 gridToLine([Line|Grid], Line_tmp, Line_out) :-
                    append(Line, Line_tmp, New_line),
                    gridToLine(Grid, New_line, Line_out).
-
