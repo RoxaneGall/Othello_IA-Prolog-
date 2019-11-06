@@ -32,15 +32,16 @@ choosePlayers(Player1,Player2) :-
     write(" vs "),
     write(Player2), nl.
 
-tryChoosePlayer(Player) :- write("Choisissez la nature du joueur (choix possibles: humain, firstMove, aleatoire, minmax) :"), read(Player), player(Player).
+tryChoosePlayer(Player) :- write("Choisissez la nature du joueur (choix possibles: humain, firstMove, aleatoire, mMCountTokens, mMCountMoves, mMCountCorners) :"), read(Player), player(Player).
 tryChoosePlayer(Player) :- write("Player inconnu ! "), tryChoosePlayer(Player).
 
 %Tous les modes de jeu possible
 player(humain).
 player(firstMove).
 player(aleatoire).
-player(minmax).
-player(minmax2).
+player(mMCountTokens).
+player(mMCountMoves).
+player(mMCountCorners).
 
 % Execution d'un tour de jeu
 
@@ -71,10 +72,16 @@ play(Grid, CurrentToken, CurrentPlayerNature, NextPlayerNature) :-
 moveToDo(humain,Token,Grid,Line,Column) :- humain(Token,Grid,Line,Column).
 moveToDo(aleatoire,Token,Grid,Line,Column) :- aleatoire(Token,Grid,Line,Column).
 moveToDo(firstMove,Token,Grid,Line,Column) :- firstMove(Token,Grid,Line,Column).
-moveToDo(minmax2,Token,Grid,Line,Column) :- 
+moveToDo(mMCountTokens,Token,Grid,Line,Column) :- 
     allPossibleMoves(Token,Grid,AllMoves),
-    evaluateAndChoose(countTokens,Token,AllMoves,3,Grid,Token,1,((_,_),-10000),((Line,Column),_)).
-moveToDo(minmax,Token,Grid,Line,Column) :- minmax(Token,Grid,Line,Column).
+    evaluateAndChoose(countTokens,Token,AllMoves,2,Grid,Token,1,((_,_),-10000),((Line,Column),_)).
+moveToDo(mMCountMoves,Token,Grid,Line,Column) :- 
+    allPossibleMoves(Token,Grid,AllMoves),
+    evaluateAndChoose(countMoves,Token,AllMoves,2,Grid,Token,1,((_,_),-10000),((Line,Column),_)).
+moveToDo(mMCountCorners,Token,Grid,Line,Column) :- 
+    allPossibleMoves(Token,Grid,AllMoves),
+    evaluateAndChoose(countCorners,Token,AllMoves,2,Grid,Token,1,((_,_),-10000),((Line,Column),_)).
+%moveToDo(minmax,Token,Grid,Line,Column) :- minmax(Token,Grid,Line,Column).
 
 % Passage au joueur oppose
 nextPlayer(x,o).

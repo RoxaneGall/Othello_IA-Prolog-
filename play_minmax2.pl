@@ -7,9 +7,9 @@ evaluateAndChoose(Heur,Player,[(Line,Column)|Moves],D,CurrentGrid,Token,MaxMin,C
 evaluateAndChoose(_,_,[],_,CurrentGrid,Token,_,BestMove,BestMove) :- 
     canMove(CurrentGrid,Token).
 
-evaluateAndChoose(Heur,Player,[],_,CurrentGrid,Token,MaxMin,_,((_,_),Value)) :- 
+evaluateAndChoose(_,Player,[],_,CurrentGrid,Token,MaxMin,_,((_,_),Value)) :- 
     endGame(CurrentGrid), 
-    minmax(Heur,Player,0,CurrentGrid,Token,MaxMin,(_,_),Value).
+    minmax(endGame,Player,0,CurrentGrid,Token,MaxMin,(_,_),Value).
 
 evaluateAndChoose(Heur,Player,[],D,CurrentGrid,Token,MaxMin,_,(Move,Value)) :- 
     minmax(Heur,Player,D,CurrentGrid,Token,MaxMin,Move,Value).

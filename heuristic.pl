@@ -1,9 +1,7 @@
-%to improve performance we cache the results and try to retrieve it
-isWinner(Nb1,Nb2,inf) :- Nb1 > Nb2.
-isWinner(_,_,-inf).
-
-heuristic(_,Grid,Token,Eval) :-
-    endGame(Grid),
+isWinner(Nb1,Nb2,100) :- Nb1 > Nb2.
+isWinner(_,_,-100).
+    
+heuristic(endGame,Grid,Token,Eval) :-
     next(Token,Opponent),
     countTokens(Grid, Token, 0, Nb1),
     countTokens(Grid, Opponent, 0, Nb2),
@@ -15,14 +13,16 @@ heuristic(countTokens,Grid,Token,Eval) :-
     countTokens(Grid, Opponent, 0, NbTokensOpponent),
     Eval is NbTokensCurrentPlayer-NbTokensOpponent.
 
-heuristic(countMoves,Grid,Token,Eval) :-    all_possible_moves(Token, Grid, AllMovesMax), length(AllMovesMax, Nb_MaxMoves),
+heuristic(countMoves,Grid,Token,Eval) :-   
+    all_possible_moves(Token, Grid, AllMovesMax), 
+    length(AllMovesMax, Nb_MaxMoves),
     nextPlayer(Token,Opponent),
     all_possible_moves(Opponent, Grid, AllMovesMin), length(AllMovesMin, Nb_MinMoves),
     Eval is Nb_MaxMoves - Nb_MinMoves,
     nl, write(Eval).
 
 heuristic(countCorners,Grid,Token,Eval) :-
-        getCorners(Grid,ListCorners),   %listeCorners est une liste de 4 éléments dans laquelle est stockée
+        getCorners(Grid,ListCorners),   %listeCorners est une liste de 4 ï¿½lï¿½ments dans laquelle est stockï¿½e
         %la valeur de chaque coin
         countTokensInRow(ListCorners,Token,0, Nb_CornersMax),
         nextPlayer(Token,Opponent),
@@ -37,7 +37,7 @@ heuristic(stability,Grid,Token,Eval):-
                    stabilityHeuristic(AsLine,Stability_line,Token,Opponent,Res_PlayerMax,Res_PlayerMin),
                    Eval is Res_PlayerMax - Res_PlayerMin.
 
-%Récupération des valeurs des coins
+%Rï¿½cupï¿½ration des valeurs des coins
 getCorners(Grid,[C1,C2,C3,C4]):-
         element(Grid,1,1,C1),
         element(Grid,8,1,C2),
