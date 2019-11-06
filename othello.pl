@@ -32,7 +32,7 @@ choosePlayers(Player1,Player2) :-
     write(" vs "),
     write(Player2), nl.
 
-tryChoosePlayer(Player) :- write("Choisissez la nature du joueur (choix possibles: humain, firstMove, aleatoire, mMCountTokens, mMCountMoves, mMCountCorners) :"), read(Player), player(Player).
+tryChoosePlayer(Player) :- write("Choisissez la nature du joueur (choix possibles: humain, firstMove, aleatoire, mMCountTokens, mMCountMoves, mMCountCorners, mMStabilite) :"), read(Player), player(Player).
 tryChoosePlayer(Player) :- write("Player inconnu ! "), tryChoosePlayer(Player).
 
 %Tous les modes de jeu possible
@@ -42,6 +42,7 @@ player(aleatoire).
 player(mMCountTokens).
 player(mMCountMoves).
 player(mMCountCorners).
+player(mMStabilite).
 
 % Execution d'un tour de jeu
 
@@ -81,6 +82,9 @@ moveToDo(mMCountMoves,Token,Grid,Line,Column) :-
 moveToDo(mMCountCorners,Token,Grid,Line,Column) :- 
     allPossibleMoves(Token,Grid,AllMoves),
     evaluateAndChoose(countCorners,Token,AllMoves,2,Grid,Token,1,((_,_),-10000),((Line,Column),_)).
+moveToDo(mMStabilite,Token,Grid,Line,Column) :- 
+    allPossibleMoves(Token,Grid,AllMoves),
+    evaluateAndChoose(stabilite,Token,AllMoves,2,Grid,Token,1,((_,_),-10000),((Line,Column),_)).
 %moveToDo(minmax,Token,Grid,Line,Column) :- minmax(Token,Grid,Line,Column).
 
 % Passage au joueur oppose
