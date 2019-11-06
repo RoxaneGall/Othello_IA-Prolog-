@@ -3,11 +3,14 @@
 :- consult('./play_aleatoire.pl').
 :- consult('./play_humain.pl').
 :- consult('./play_minmax.pl').
+:- consult('./play_minmax2.pl').
 :- consult('./utils.pl').
 :- consult('./stats.pl').
 :- consult('./heuristic.pl').
 
-:- set_prolog_flag(stack_limit, 10 000 000 000).
+:- set_prolog_flag(stack_limit, 14 000 000 000).
+%:- set_prolog_stack(global, limit(14 000 000 000)).
+
 
 % Initialisation
 play() :-
@@ -37,6 +40,7 @@ player(humain).
 player(firstMove).
 player(aleatoire).
 player(minmax).
+player(minmax2).
 
 % Execution d'un tour de jeu
 
@@ -67,6 +71,9 @@ play(Grid, CurrentToken, CurrentPlayerNature, NextPlayerNature) :-
 moveToDo(humain,Token,Grid,Line,Column) :- humain(Token,Grid,Line,Column).
 moveToDo(aleatoire,Token,Grid,Line,Column) :- aleatoire(Token,Grid,Line,Column).
 moveToDo(firstMove,Token,Grid,Line,Column) :- firstMove(Token,Grid,Line,Column).
+moveToDo(minmax2,Token,Grid,Line,Column) :- 
+    allPossibleMoves(Token,Grid,AllMoves),
+    evaluateAndChoose(countTokens,Token,AllMoves,3,Grid,Token,1,((_,_),-10000),((Line,Column),_)).
 moveToDo(minmax,Token,Grid,Line,Column) :- minmax(Token,Grid,Line,Column).
 
 % Passage au joueur oppose

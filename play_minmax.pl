@@ -1,16 +1,24 @@
 
 minmax(Token,Grid,Line,Column) :-
     all_possible_moves(Token, Grid, AllMoves),
-    minmax(max,countMoves,Token,2,Grid,AllMoves,-inf,_,_,Line,Column,_).
+    minmax(max,countTokens,Token,3,Grid,AllMoves,-inf,_,_,Line,Column,_).
 
-
-%cas d'une grille en fin de jeu (pas de move possible d'ou [])
-minmax(_,Heur,Token,_,CurrentGrid,[],_,Line,Column,Line,Column,FinalEval) :-
-    endGame(CurrentGrid),
-    heuristic(Heur,CurrentGrid,Token,FinalEval).
-
-%Plus de move possible ou fin du jeu
+%Plus de move possibles
 minmax(_,_,_,_,_,[],FinalEval,FinalLine,FinalColumn,FinalLine,FinalColumn,FinalEval).
+
+%minmax(Comparator,Heur,Token,CurrentDepth,CurrentGrid,[[Line,Column]|RemainingMoves],CurrentEval,CurrentLine,CurrentColumn,FinalLine,FinalColumn,FinalEval) :-
+ %   variant_hash([Comparator,Heur,CurrentDepth,CurrentGrid,Token,Line,Column],Key),
+  %  get(Key, Eval),
+   % compare(Comparator,Eval,CurrentEval,NewEval,Line,Column,CurrentLine,CurrentColumn,NewLine,NewColumn),
+    %minmax(Comparator,Heur,Token,CurrentDepth,CurrentGrid,RemainingMoves,NewEval,NewLine,NewColumn,FinalLine,FinalColumn,FinalEval).
+
+%minmax(Comparator,Heur,Token,CurrentDepth,CurrentGrid,[[Line,Column]|RemainingMoves],CurrentEval,CurrentLine,CurrentColumn,FinalLine,FinalColumn,FinalEval) :-
+ %   next(Token,NextToken),
+  %  variant_hash([Comparator,Heur,CurrentDepth,CurrentGrid,NextToken,Line,Column],Key),
+   % get(Key, OpponentEval),
+    %Eval is OpponentEval * -1,
+    %compare(Comparator,Eval,CurrentEval,NewEval,Line,Column,CurrentLine,CurrentColumn,NewLine,NewColumn),
+    %minmax(Comparator,Heur,Token,CurrentDepth,CurrentGrid,RemainingMoves,NewEval,NewLine,NewColumn,FinalLine,FinalColumn,FinalEval).
 
 minmax(Comparator,Heur,Token,0,CurrentGrid,[[Line,Column]|RemainingMoves],CurrentEval,CurrentLine,CurrentColumn,FinalLine,FinalColumn,FinalEval) :-
     doMove(CurrentGrid,Line,Column,Token,NewGrid),
@@ -27,9 +35,38 @@ minmax(Comparator,Heur,Token,CurrentDepth,CurrentGrid,[[Line,Column]|RemainingMo
     next(Comparator,NextComparator,NextInitEval),
     next(Token,NextToken),
     decr(CurrentDepth,NextDepth),
+    canMove(NewGrid,NextToken),
     all_possible_moves(NextToken, NewGrid, NextDepthAllMoves),
     minmax(NextComparator,Heur,NextToken,NextDepth,NewGrid,NextDepthAllMoves,NextInitEval,Line,Column,_,_,Eval),
     compare(Comparator,Eval,CurrentEval,NewEval,Line,Column,CurrentLine,CurrentColumn,NewLine,NewColumn),
+    %variant_hash([Comparator,Heur,CurrentDepth,CurrentGrid,Token,Line,Column],Key),
+    %set(Key, Eval),
+    minmax(Comparator,Heur,Token,CurrentDepth,CurrentGrid,RemainingMoves,NewEval,NewLine,NewColumn,FinalLine,FinalColumn,FinalEval).
+
+minmax(Comparator,Heur,Token,CurrentDepth,CurrentGrid,[[Line,Column]|RemainingMoves],CurrentEval,CurrentLine,CurrentColumn,FinalLine,FinalColumn,FinalEval) :- 
+    doMove(CurrentGrid,Line,Column,Token,NewGrid),
+    endGame(NewGrid),
+    heuristic(Heur,CurrentGrid,Token,Eval),
+    compare(Comparator,Eval,CurrentEval,NewEval,Line,Column,CurrentLine,CurrentColumn,NewLine,NewColumn),
+    %variant_hash([Comparator,Heur,CurrentDepth,CurrentGrid,Token,Line,Column],Key),
+    %set(Key, Eval),
+    minmax(Comparator,Heur,Token,CurrentDepth,CurrentGrid,RemainingMoves,NewEval,NewLine,NewColumn,FinalLine,FinalColumn,FinalEval).
+
+%cas ou la profondeur suivante est un passage de tour
+minmax(Comparator,Heur,Token,CurrentDepth,CurrentGrid,[[Line,Column]|RemainingMoves],CurrentEval,CurrentLine,CurrentColumn,FinalLine,FinalColumn,FinalEval) :- 
+    doMove(CurrentGrid,Line,Column,Token,NewGrid),
+    canMove(NewGrid,Token),
+    all_possible_moves(Token, NewGrid, NextDepthAllMoves),
+    NextDepth is CurrentDepth - 2,
+    ( NextDepth >= 0 ->
+    next(_,Comparator,InitEval),
+    minmax(Comparator,Heur,Token,NextDepth,NewGrid,NextDepthAllMoves,InitEval,Line,Column,_,_,Eval),
+    compare(Comparator,Eval,CurrentEval,NewEval,Line,Column,CurrentLine,CurrentColumn,NewLine,NewColumn); 
+    heuristic(Heur,CurrentGrid,Token,Eval),
+    compare(Comparator,Eval,CurrentEval,NewEval,Line,Column,CurrentLine,CurrentColumn,NewLine,NewColumn)
+    ),
+    %variant_hash([Comparator,Heur,CurrentDepth,CurrentGrid,Token,Line,Column],Key),
+    %set(Key, Eval),
     minmax(Comparator,Heur,Token,CurrentDepth,CurrentGrid,RemainingMoves,NewEval,NewLine,NewColumn,FinalLine,FinalColumn,FinalEval).
 
 
