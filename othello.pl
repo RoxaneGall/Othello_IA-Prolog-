@@ -3,6 +3,7 @@
 :- consult('./play_aleatoire.pl').
 :- consult('./play_humain.pl').
 :- consult('./play_minmax2.pl').
+:- consult('./play_minmax.pl').
 :- consult('./utils.pl').
 :- consult('./stats.pl').
 :- consult('./heuristic.pl').

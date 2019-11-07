@@ -12,7 +12,7 @@ heuristic(global,Grid,Token,Eval) :-
     heuristic(countMoves,Grid,Token,Eval2),
     heuristic(countCorners,Grid,Token,Eval3),
     heuristic(stability,Grid,Token,Eval4),
-    Eval is Eval1*4 + Eval2*2 + Eval3*5 + Eval4*3.
+    Eval is Eval1*4 + Eval2*2 + Eval3*20 + Eval4*3.
 
 heuristic(countTokens,Grid,Token,Eval) :-
     countTokens(Grid, Token, 0, NbTokensCurrentPlayer),
