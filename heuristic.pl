@@ -21,10 +21,10 @@ heuristic(countTokens,Grid,Token,Eval) :-
     Eval is NbTokensCurrentPlayer-NbTokensOpponent.
 
 heuristic(countMoves,Grid,Token,Eval) :-
-    all_possible_moves(Token, Grid, AllMovesMax),
+    allPossibleMoves(Token, Grid, AllMovesMax),
     length(AllMovesMax, Nb_MaxMoves),
     nextPlayer(Token,Opponent),
-    all_possible_moves(Opponent, Grid, AllMovesMin), length(AllMovesMin, Nb_MinMoves),
+    allPossibleMoves(Opponent, Grid, AllMovesMin), length(AllMovesMin, Nb_MinMoves),
     Eval is Nb_MaxMoves - Nb_MinMoves.
 
 heuristic(countCorners,Grid,Token,Eval) :-
