@@ -11,7 +11,7 @@ stats(NbOfRounds,NbOfRoundsDone,Player1,Player2,Player1NbOfRoundsWon,Player2NbOf
     NextNbOfRoundsDone is NbOfRoundsDone+1,
     initialGrid(Grid),
     playStats(Grid,x,Player1,Player2,Winner),
-    addStats(Winner,Player1NbOfRoundsWon,Player2NbOfRoundsWon,NextPlayer1NbOfRoundsWon,NextPlayer2NbOfRoundsWon),write(NbOfRoundsDone),
+    addStats(Winner,Player1NbOfRoundsWon,Player2NbOfRoundsWon,NextPlayer1NbOfRoundsWon,NextPlayer2NbOfRoundsWon),
     stats(NbOfRounds,NextNbOfRoundsDone,Player1,Player2,NextPlayer1NbOfRoundsWon,NextPlayer2NbOfRoundsWon).
 
 stats(NbOfRounds,_,Player1,Player2,Player1NbOfRoundsWon,Player2NbOfRoundsWon) :-
