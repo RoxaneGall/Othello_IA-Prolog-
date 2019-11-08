@@ -125,7 +125,7 @@ announceWinner(Grid, CurrentToken, CurrentPlayerNature, NextPlayerNature) :-
     nl,write(" (o) : "),write(NO),write(' grilles explorees').
 
 announceWinner(_, _, _, _) :-
-    write("THERE IS NO WINNER").
+    write('THERE IS NO WINNER').
 
 countTokens([Head|Tail], Token, N, FinalN) :-
     countTokensInRow(Head, Token, N, NewN),
@@ -150,7 +150,7 @@ winner(Nx,No,x) :- Nx > No.
 winner(Nx,No,o) :- Nx < No.
 
 
-%Outils
+%Directions
 direction(bas).
 direction(basDroite).
 direction(droite).

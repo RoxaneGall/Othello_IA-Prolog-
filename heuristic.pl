@@ -2,7 +2,7 @@ isWinner(Nb1,Nb2,100) :- Nb1 > Nb2.
 isWinner(_,_,-100).
 heuristic(Heur,Grid,Token,Eval) :-
     get(Token,N1),
-    N2 is N1+1,
+    N2 is N1+1, %nombre de grille exploree incremente
     set(Token,N2),
     h(Heur,Grid,Token,Eval).
 
@@ -33,7 +33,8 @@ h(countMoves,Grid,Token,Eval) :-
     Eval is Nb_MaxMoves - Nb_MinMoves.
 
 h(countCorners,Grid,Token,Eval) :-
-        getCorners(Grid,ListCorners),   %listeCorners est une liste de 4 ï¿½lï¿½ments dans laquelle est stockï¿½e
+        getCorners(Grid,ListCorners),   
+        %listeCorners est une liste de 4 elements dans laquelle est stockee
         %la valeur de chaque coin
         countTokensInRow(ListCorners,Token,0, Nb_CornersMax),
         nextPlayer(Token,Opponent),
@@ -47,7 +48,7 @@ h(stability,Grid,Token,Eval):-
                    stabilityHeuristic(AsLine,Stability_line,Token,Opponent,Res_PlayerMax,Res_PlayerMin),
                    Eval is Res_PlayerMax - Res_PlayerMin.
 
-%Rï¿½cupï¿½ration des valeurs des coins
+%Recuperation des valeurs des coins
 getCorners(Grid,[C1,C2,C3,C4]):-
         element(Grid,1,1,C1),
         element(Grid,8,1,C2),
@@ -63,7 +64,7 @@ stability_weights([0,  0,   0,  0,  0,  0,  0,  0,  0, 0,
                    0,  2,  -1,  1,  0,  0,  1, -1,  2, 0,
                    0, -3,  -4, -1, -1, -1, -1, -4, -3, 0,
                    0,  4,  -3,  2,  2,  2,  2, -3,  4, 0,
-                   0,  0,   0,  0,  0,  0,  0,  0,  0, 0]).
+                   0,  0,   0,  0,  0,  0,  0,  0,  0, 0]).%Les 0 sur les cotés correspondent au bord de la grille sur lequel on ne peut pas poser de jeton.
 
 stabilityHeuristic([], [],_,_, 0, 0).
 

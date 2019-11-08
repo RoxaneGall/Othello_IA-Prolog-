@@ -57,6 +57,7 @@ playStats(Grid, CurrentToken, CurrentPlayerNature, NextPlayerNature, Winner) :-
     nextPlayer(CurrentToken,NextToken),
     playStats(Grid,NextToken,NextPlayerNature,CurrentPlayerNature, Winner).
 
+%Pour garder le nombre de grilles explorees
 set(Key, _) :-
   delete(Key, _),
   fail.

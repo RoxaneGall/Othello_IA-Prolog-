@@ -7,8 +7,7 @@
 :- consult('./stats.pl').
 :- consult('./heuristic.pl').
 
-:- set_prolog_flag(stack_limit, 14 000 000 000).
-%:- set_prolog_stack(global, limit(14 000 000 000)).
+:- set_prolog_flag(stack_limit, 14 000 000 000). %Pour le developpement, et la recherche en profondeur D=5.
 
 
 % Initialisation
@@ -80,37 +79,16 @@ play(Grid, CurrentToken, CurrentPlayerNature, NextPlayerNature) :-
 moveToDo(humain,Token,Grid,Line,Column) :- humain(Token,Grid,Line,Column).
 moveToDo(aleatoire,Token,Grid,Line,Column) :- aleatoire(Token,Grid,Line,Column).
 moveToDo(firstMove,Token,Grid,Line,Column) :- firstMove(Token,Grid,Line,Column).
-moveToDo(mMCountTokens,Token,Grid,Line,Column) :- 
-    allPossibleMoves(Token,Grid,AllMoves),
-    evaluateAndChoose(countTokens,Token,AllMoves,2,Grid,Token,1,((_,_),-10000),((Line,Column),_)).
-moveToDo(mMCountMoves,Token,Grid,Line,Column) :- 
-    allPossibleMoves(Token,Grid,AllMoves),
-    evaluateAndChoose(countMoves,Token,AllMoves,2,Grid,Token,1,((_,_),-10000),((Line,Column),_)).
-moveToDo(mMCountCorners,Token,Grid,Line,Column) :- 
-    allPossibleMoves(Token,Grid,AllMoves),
-    evaluateAndChoose(countCorners,Token,AllMoves,2,Grid,Token,1,((_,_),-10000),((Line,Column),_)).
-moveToDo(mMStabilite,Token,Grid,Line,Column) :- 
-    allPossibleMoves(Token,Grid,AllMoves),
-    evaluateAndChoose(stability,Token,AllMoves,2,Grid,Token,1,((_,_),-10000),((Line,Column),_)).
-moveToDo(mMGlobal,Token,Grid,Line,Column) :- 
-    allPossibleMoves(Token,Grid,AllMoves),
-    evaluateAndChoose(global,Token,AllMoves,2,Grid,Token,1,((_,_),-10000),((Line,Column),_)).
-moveToDo(aBCountTokens,Token,Grid,Line,Column) :- 
-    allPossibleMoves(Token,Grid,AllMoves),
-    evaluateAndChoose(countTokens,Token,AllMoves,2,Grid,Token,1,-100000,100000,((_,_),-10000),((Line,Column),_)).
-moveToDo(aBCountMoves,Token,Grid,Line,Column) :- 
-    allPossibleMoves(Token,Grid,AllMoves),
-    evaluateAndChoose(countMoves,Token,AllMoves,2,Grid,Token,1,-100000,100000,((_,_),-10000),((Line,Column),_)).
-moveToDo(aBCountCorners,Token,Grid,Line,Column) :- 
-    allPossibleMoves(Token,Grid,AllMoves),
-    evaluateAndChoose(countCorners,Token,AllMoves,2,Grid,Token,1,-100000,100000,((_,_),-10000),((Line,Column),_)).
-moveToDo(aBStabilite,Token,Grid,Line,Column) :- 
-    allPossibleMoves(Token,Grid,AllMoves),
-    evaluateAndChoose(stability,Token,AllMoves,2,Grid,Token,1,-100000,100000,((_,_),-10000),((Line,Column),_)).
-moveToDo(aBGlobal,Token,Grid,Line,Column) :- 
-    allPossibleMoves(Token,Grid,AllMoves),
-    evaluateAndChoose(global,Token,AllMoves,2,Grid,Token,1,-100000,100000,((_,_),-10000),((Line,Column),_)).
-%moveToDo(minmax,Token,Grid,Line,Column) :- minmax(Token,Grid,Line,Column).
+moveToDo(mMCountTokens,Token,Grid,Line,Column) :- minmax(countTokens,Token,3,Grid,Token,(Line,Column)).
+moveToDo(mMCountMoves,Token,Grid,Line,Column) :- minmax(countMoves,Token,3,Grid,Token,(Line,Column)).
+moveToDo(mMCountCorners,Token,Grid,Line,Column) :- minmax(countCorners,Token,3,Grid,Token,(Line,Column)).
+moveToDo(mMStabilite,Token,Grid,Line,Column) :- minmax(stabilite,Token,3,Grid,Token,(Line,Column)).
+moveToDo(mMGlobal,Token,Grid,Line,Column) :- minmax(global,Token,3,Grid,Token,(Line,Column)).
+moveToDo(aBCountTokens,Token,Grid,Line,Column) :- alphaBeta(countTokens,Token,3,Grid,Token,(Line,Column)).
+moveToDo(aBCountMoves,Token,Grid,Line,Column) :- alphaBeta(countMoves,Token,3,Grid,Token,(Line,Column)).
+moveToDo(aBCountCorners,Token,Grid,Line,Column) :- alphaBeta(countCorners,Token,3,Grid,Token,(Line,Column)).
+moveToDo(aBStabilite,Token,Grid,Line,Column) :- alphaBeta(stabilite,Token,3,Grid,Token,(Line,Column)).
+moveToDo(aBGlobal,Token,Grid,Line,Column) :- alphaBeta(global,Token,3,Grid,Token,(Line,Column)).
 
 % Passage au joueur oppose
 nextPlayer(x,o).
