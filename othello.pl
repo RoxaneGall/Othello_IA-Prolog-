@@ -13,11 +13,11 @@
 % Initialisation
 play() :-
     choosePlayers(Player1,Player2),
-    set(x,0),
-    set(o,0),
     play(Player1,Player2).
 
 play(Player1,Player2) :-
+    set(x,0),
+    set(o,0),
     initialGrid(Grid),
     displayGrid(Grid,x),
     play(Grid,x,Player1,Player2).
@@ -82,12 +82,12 @@ moveToDo(firstMove,Token,Grid,Line,Column) :- firstMove(Token,Grid,Line,Column).
 moveToDo(mMCountTokens,Token,Grid,Line,Column) :- minmax(countTokens,Token,3,Grid,Token,(Line,Column)).
 moveToDo(mMCountMoves,Token,Grid,Line,Column) :- minmax(countMoves,Token,3,Grid,Token,(Line,Column)).
 moveToDo(mMCountCorners,Token,Grid,Line,Column) :- minmax(countCorners,Token,3,Grid,Token,(Line,Column)).
-moveToDo(mMStabilite,Token,Grid,Line,Column) :- minmax(stabilite,Token,3,Grid,Token,(Line,Column)).
+moveToDo(mMStabilite,Token,Grid,Line,Column) :- minmax(stability,Token,3,Grid,Token,(Line,Column)).
 moveToDo(mMGlobal,Token,Grid,Line,Column) :- minmax(global,Token,3,Grid,Token,(Line,Column)).
 moveToDo(aBCountTokens,Token,Grid,Line,Column) :- alphaBeta(countTokens,Token,3,Grid,Token,(Line,Column)).
 moveToDo(aBCountMoves,Token,Grid,Line,Column) :- alphaBeta(countMoves,Token,3,Grid,Token,(Line,Column)).
 moveToDo(aBCountCorners,Token,Grid,Line,Column) :- alphaBeta(countCorners,Token,3,Grid,Token,(Line,Column)).
-moveToDo(aBStabilite,Token,Grid,Line,Column) :- alphaBeta(stabilite,Token,3,Grid,Token,(Line,Column)).
+moveToDo(aBStabilite,Token,Grid,Line,Column) :- alphaBeta(stability,Token,3,Grid,Token,(Line,Column)).
 moveToDo(aBGlobal,Token,Grid,Line,Column) :- alphaBeta(global,Token,3,Grid,Token,(Line,Column)).
 
 % Passage au joueur oppose
