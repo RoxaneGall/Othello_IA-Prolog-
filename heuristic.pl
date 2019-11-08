@@ -1,33 +1,38 @@
 isWinner(Nb1,Nb2,100) :- Nb1 > Nb2.
 isWinner(_,_,-100).
+heuristic(Heur,Grid,Token,Eval) :-
+    get(Token,N1),
+    N2 is N1+1,
+    set(Token,N2),
+    h(Heur,Grid,Token,Eval).
 
-heuristic(endGame,Grid,Token,Eval) :-
+h(endGame,Grid,Token,Eval) :-
     next(Token,Opponent),
     countTokens(Grid, Token, 0, Nb1),
     countTokens(Grid, Opponent, 0, Nb2),
     isWinner(Nb1,Nb2,Eval).
 
-heuristic(global,Grid,Token,Eval) :- 
-    heuristic(countTokens,Grid,Token,Eval1),
-    heuristic(countMoves,Grid,Token,Eval2),
-    heuristic(countCorners,Grid,Token,Eval3),
-    heuristic(stability,Grid,Token,Eval4),
+h(global,Grid,Token,Eval) :- 
+    h(countTokens,Grid,Token,Eval1),
+    h(countMoves,Grid,Token,Eval2),
+    h(countCorners,Grid,Token,Eval3),
+    h(stability,Grid,Token,Eval4),
     Eval is Eval1*4 + Eval2*2 + Eval3*20 + Eval4*3.
 
-heuristic(countTokens,Grid,Token,Eval) :-
+h(countTokens,Grid,Token,Eval) :-
     countTokens(Grid, Token, 0, NbTokensCurrentPlayer),
     nextPlayer(Token,Opponent),
     countTokens(Grid, Opponent, 0, NbTokensOpponent),
     Eval is NbTokensCurrentPlayer-NbTokensOpponent.
 
-heuristic(countMoves,Grid,Token,Eval) :-
+h(countMoves,Grid,Token,Eval) :-
     allPossibleMoves(Token, Grid, AllMovesMax),
     length(AllMovesMax, Nb_MaxMoves),
     nextPlayer(Token,Opponent),
     allPossibleMoves(Opponent, Grid, AllMovesMin), length(AllMovesMin, Nb_MinMoves),
     Eval is Nb_MaxMoves - Nb_MinMoves.
 
-heuristic(countCorners,Grid,Token,Eval) :-
+h(countCorners,Grid,Token,Eval) :-
         getCorners(Grid,ListCorners),   %listeCorners est une liste de 4 ï¿½lï¿½ments dans laquelle est stockï¿½e
         %la valeur de chaque coin
         countTokensInRow(ListCorners,Token,0, Nb_CornersMax),
@@ -35,7 +40,7 @@ heuristic(countCorners,Grid,Token,Eval) :-
         countTokensInRow(ListCorners,Opponent,0, Nb_CornersMin),
         Eval is Nb_CornersMax - Nb_CornersMin.
 
-heuristic(stability,Grid,Token,Eval):-
+h(stability,Grid,Token,Eval):-
                    gridToLine(Grid, AsLine),
                    stability_weights(Stability_line),
                    nextPlayer(Token,Opponent),

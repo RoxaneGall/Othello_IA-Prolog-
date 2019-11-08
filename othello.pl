@@ -4,7 +4,6 @@
 :- consult('./play_humain.pl').
 :- consult('./play_minmax.pl').
 :- consult('./play_alphaBeta.pl').
-:- consult('./utils.pl').
 :- consult('./stats.pl').
 :- consult('./heuristic.pl').
 
