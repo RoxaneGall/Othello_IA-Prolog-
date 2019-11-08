@@ -118,7 +118,11 @@ announceWinner(Grid, CurrentToken, CurrentPlayerNature, NextPlayerNature) :-
     getPlayerNature(Winner, CurrentToken, CurrentPlayerNature, NextPlayerNature, WinnerNature),
     write("       x: "), write(Nx), nl,
     write("       o: "), write(No), nl,
-    write("       WINNER IS : "), write(WinnerNature), write(" ("), write(Winner), write(")."),nl,nl.
+    write("       WINNER IS : "), write(WinnerNature), write(" ("), write(Winner), write(")."),nl,nl,
+    get(x,NX),
+    get(o,NO),
+    write(" (x) : "),write(NX),write(' grilles explorees'),
+    nl,write(" (o) : "),write(NO),write(' grilles explorees').
 
 announceWinner(_, _, _, _) :-
     write("THERE IS NO WINNER").

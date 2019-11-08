@@ -1,4 +1,4 @@
-:- consult('./Grid.pl').
+:- consult('./grid.pl').
 :- consult('./play_firstMove.pl').
 :- consult('./play_aleatoire.pl').
 :- consult('./play_humain.pl').
@@ -14,6 +14,8 @@
 % Initialisation
 play() :-
     choosePlayers(Player1,Player2),
+    set(x,0),
+    set(o,0),
     play(Player1,Player2).
 
 play(Player1,Player2) :-
