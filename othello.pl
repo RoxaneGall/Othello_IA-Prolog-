@@ -32,7 +32,7 @@ choosePlayers(Player1,Player2) :-
     write(" vs "),
     write(Player2), nl.
 
-tryChoosePlayer(Player) :- write("Choisissez la nature du joueur (choix possibles: humain, firstMove, aleatoire, mMCountTokens, mMCountMoves, mMCountCorners, mMStabilite, mMGlobal, aBGlobal) :"), read(Player), player(Player).
+tryChoosePlayer(Player) :- write("Choisissez la nature du joueur (choix possibles: humain, firstMove, aleatoire, mMCountTokens, mMCountMoves, mMCountCorners, mMStabilite, mMGlobal, aBCountTokens, aBCountMoves, aBCountCorners, aBStabilite, aBGlobal) :"), read(Player), player(Player).
 tryChoosePlayer(Player) :- write("Player inconnu ! "), tryChoosePlayer(Player).
 
 %Tous les modes de jeu possible
@@ -44,6 +44,10 @@ player(mMCountMoves).
 player(mMCountCorners).
 player(mMStabilite).
 player(mMGlobal).
+player(aBCountTokens).
+player(aBCountMoves).
+player(aBCountCorners).
+player(aBStabilite).
 player(aBGlobal).
 
 % Execution d'un tour de jeu
@@ -90,6 +94,18 @@ moveToDo(mMStabilite,Token,Grid,Line,Column) :-
 moveToDo(mMGlobal,Token,Grid,Line,Column) :- 
     allPossibleMoves(Token,Grid,AllMoves),
     evaluateAndChoose(global,Token,AllMoves,2,Grid,Token,1,((_,_),-10000),((Line,Column),_)).
+moveToDo(aBCountTokens,Token,Grid,Line,Column) :- 
+    allPossibleMoves(Token,Grid,AllMoves),
+    evaluateAndChoose(global,Token,AllMoves,2,Grid,Token,1,-100000,100000,((_,_),-10000),((Line,Column),_)).
+moveToDo(aBCountMoves,Token,Grid,Line,Column) :- 
+    allPossibleMoves(Token,Grid,AllMoves),
+    evaluateAndChoose(global,Token,AllMoves,2,Grid,Token,1,-100000,100000,((_,_),-10000),((Line,Column),_)).
+moveToDo(aBCountCorners,Token,Grid,Line,Column) :- 
+    allPossibleMoves(Token,Grid,AllMoves),
+    evaluateAndChoose(global,Token,AllMoves,2,Grid,Token,1,-100000,100000,((_,_),-10000),((Line,Column),_)).
+moveToDo(aBStabilite,Token,Grid,Line,Column) :- 
+    allPossibleMoves(Token,Grid,AllMoves),
+    evaluateAndChoose(global,Token,AllMoves,2,Grid,Token,1,-100000,100000,((_,_),-10000),((Line,Column),_)).
 moveToDo(aBGlobal,Token,Grid,Line,Column) :- 
     allPossibleMoves(Token,Grid,AllMoves),
     evaluateAndChoose(global,Token,AllMoves,2,Grid,Token,1,-100000,100000,((_,_),-10000),((Line,Column),_)).
