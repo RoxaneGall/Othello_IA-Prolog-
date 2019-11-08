@@ -3,6 +3,7 @@
 :- consult('./play_aleatoire.pl').
 :- consult('./play_humain.pl').
 :- consult('./play_minmax.pl').
+:- consult('./play_alphaBeta.pl').
 :- consult('./utils.pl').
 :- consult('./stats.pl').
 :- consult('./heuristic.pl').
@@ -31,7 +32,7 @@ choosePlayers(Player1,Player2) :-
     write(" vs "),
     write(Player2), nl.
 
-tryChoosePlayer(Player) :- write("Choisissez la nature du joueur (choix possibles: humain, firstMove, aleatoire, mMCountTokens, mMCountMoves, mMCountCorners, mMStabilite, mMGlobal) :"), read(Player), player(Player).
+tryChoosePlayer(Player) :- write("Choisissez la nature du joueur (choix possibles: humain, firstMove, aleatoire, mMCountTokens, mMCountMoves, mMCountCorners, mMStabilite, mMGlobal, aBGlobal) :"), read(Player), player(Player).
 tryChoosePlayer(Player) :- write("Player inconnu ! "), tryChoosePlayer(Player).
 
 %Tous les modes de jeu possible
@@ -43,6 +44,7 @@ player(mMCountMoves).
 player(mMCountCorners).
 player(mMStabilite).
 player(mMGlobal).
+player(aBGlobal).
 
 % Execution d'un tour de jeu
 
@@ -87,7 +89,10 @@ moveToDo(mMStabilite,Token,Grid,Line,Column) :-
     evaluateAndChoose(stability,Token,AllMoves,2,Grid,Token,1,((_,_),-10000),((Line,Column),_)).
 moveToDo(mMGlobal,Token,Grid,Line,Column) :- 
     allPossibleMoves(Token,Grid,AllMoves),
-    evaluateAndChoose(global,Token,AllMoves,2,Grid,Token,1,((_,_),-10000),((Line,Column),_)).
+    evaluateAndChoose(global,Token,AllMoves,1,Grid,Token,1,((_,_),-10000),((Line,Column),_)).
+moveToDo(aBGlobal,Token,Grid,Line,Column) :- 
+    allPossibleMoves(Token,Grid,AllMoves),
+    evaluateAndChoose(global,Token,AllMoves,1,Grid,Token,-100000,100000,((_,_),-10000),((Line,Column),_)).
 %moveToDo(minmax,Token,Grid,Line,Column) :- minmax(Token,Grid,Line,Column).
 
 % Passage au joueur oppose

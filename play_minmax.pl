@@ -27,8 +27,8 @@ minmax(Heur,Player,D,Grid,Token,MaxMin,Move,Value) :-
     evaluateAndChoose(Heur,Player,AllMoves,NextD,Grid,NextToken,MinMax,((_,_),-10000),(Move,V)),
     Value is -V.
 
-update((_,_),Value,((Line1,Column1),Value1),((Line1,Column1),Value1)) :- Value < Value1.
-update((Line,Column),Value,_,((Line,Column),Value)).
+update((Line,Column),Value,((_,_),CurrentValue),((Line,Column),Value)) :- Value > CurrentValue.
+update((_,_),_,((Line,Column),Value),((Line,Column),Value)).
 
 next(min,max,-inf).
 next(max,min,inf).
