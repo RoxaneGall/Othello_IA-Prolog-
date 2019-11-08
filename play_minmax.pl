@@ -2,7 +2,9 @@ evaluateAndChoose(Heur,Player,[(Line,Column)|Moves],D,CurrentGrid,Token,MaxMin,C
     doMove(CurrentGrid,Line,Column,Token,NewGrid),
     minmax(Heur,Player,D,NewGrid,Token,MaxMin,(_,_),Value),
     update((Line,Column),Value,CurrentBestMove,NewBestMove),
-    evaluateAndChoose(Heur,Player,Moves,D,CurrentGrid,Token,MaxMin,NewBestMove,BestMove).
+    evaluateAndChoose(Heur,Player,Moves,D,CurrentGrid,Token,MaxMin,NewBestMove,BestMove)
+    %,write(" D= "),write(D),write(" currentBestMove: "),write(CurrentBestMove),write(" newMove: "),write(((Line,Column),Value)),write(" BestMove: "),write(BestMove),nl
+    .
 
 evaluateAndChoose(_,_,[],_,CurrentGrid,Token,_,BestMove,BestMove) :- 
     canMove(CurrentGrid,Token).

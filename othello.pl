@@ -89,10 +89,10 @@ moveToDo(mMStabilite,Token,Grid,Line,Column) :-
     evaluateAndChoose(stability,Token,AllMoves,2,Grid,Token,1,((_,_),-10000),((Line,Column),_)).
 moveToDo(mMGlobal,Token,Grid,Line,Column) :- 
     allPossibleMoves(Token,Grid,AllMoves),
-    evaluateAndChoose(global,Token,AllMoves,1,Grid,Token,1,((_,_),-10000),((Line,Column),_)).
+    evaluateAndChoose(global,Token,AllMoves,2,Grid,Token,1,((_,_),-10000),((Line,Column),_)).
 moveToDo(aBGlobal,Token,Grid,Line,Column) :- 
     allPossibleMoves(Token,Grid,AllMoves),
-    evaluateAndChoose(global,Token,AllMoves,1,Grid,Token,-100000,100000,((_,_),-10000),((Line,Column),_)).
+    evaluateAndChoose(global,Token,AllMoves,2,Grid,Token,1,-100000,100000,((_,_),-10000),((Line,Column),_)).
 %moveToDo(minmax,Token,Grid,Line,Column) :- minmax(Token,Grid,Line,Column).
 
 % Passage au joueur oppose
