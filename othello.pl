@@ -95,16 +95,16 @@ moveToDo(mMGlobal,Token,Grid,Line,Column) :-
     evaluateAndChoose(global,Token,AllMoves,2,Grid,Token,1,((_,_),-10000),((Line,Column),_)).
 moveToDo(aBCountTokens,Token,Grid,Line,Column) :- 
     allPossibleMoves(Token,Grid,AllMoves),
-    evaluateAndChoose(global,Token,AllMoves,2,Grid,Token,1,-100000,100000,((_,_),-10000),((Line,Column),_)).
+    evaluateAndChoose(countTokens,Token,AllMoves,2,Grid,Token,1,-100000,100000,((_,_),-10000),((Line,Column),_)).
 moveToDo(aBCountMoves,Token,Grid,Line,Column) :- 
     allPossibleMoves(Token,Grid,AllMoves),
-    evaluateAndChoose(global,Token,AllMoves,2,Grid,Token,1,-100000,100000,((_,_),-10000),((Line,Column),_)).
+    evaluateAndChoose(countMoves,Token,AllMoves,2,Grid,Token,1,-100000,100000,((_,_),-10000),((Line,Column),_)).
 moveToDo(aBCountCorners,Token,Grid,Line,Column) :- 
     allPossibleMoves(Token,Grid,AllMoves),
-    evaluateAndChoose(global,Token,AllMoves,2,Grid,Token,1,-100000,100000,((_,_),-10000),((Line,Column),_)).
+    evaluateAndChoose(countCorners,Token,AllMoves,2,Grid,Token,1,-100000,100000,((_,_),-10000),((Line,Column),_)).
 moveToDo(aBStabilite,Token,Grid,Line,Column) :- 
     allPossibleMoves(Token,Grid,AllMoves),
-    evaluateAndChoose(global,Token,AllMoves,2,Grid,Token,1,-100000,100000,((_,_),-10000),((Line,Column),_)).
+    evaluateAndChoose(stability,Token,AllMoves,2,Grid,Token,1,-100000,100000,((_,_),-10000),((Line,Column),_)).
 moveToDo(aBGlobal,Token,Grid,Line,Column) :- 
     allPossibleMoves(Token,Grid,AllMoves),
     evaluateAndChoose(global,Token,AllMoves,2,Grid,Token,1,-100000,100000,((_,_),-10000),((Line,Column),_)).
